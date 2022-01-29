@@ -42,7 +42,7 @@ params:
         subtitle: Enjoy your life!
         avatar:
             enabled: true
-            local: false
+            local: true
             src: img/avatar.jpg
 
     article:
