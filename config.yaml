@@ -39,11 +39,11 @@ params:
 
     sidebar:
         emoji: 🍥
-        subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        subtitle: Enjoy your life!
         avatar:
             enabled: true
-            local: true
-            src: img/avatar.png
+            local: false
+            src: img/avatar.jpg
 
     article:
         math: false
