@@ -221,5 +221,6 @@ markup:
         lineNoStart: 1
         lineNos: true   
         lineNumbersInTable: true
-        noClasses: false
+        noClasses: true
+        style: monokai
         tabWidth: 4
