@@ -31,7 +31,7 @@ image: LanYang-Museum.jpg
     ```cpp
     arr = [1, 5, 7, 20]
     bool condition(int val) {
-    	return (val >= 6);
+    return (val >= 6);
     }
     ```
     
