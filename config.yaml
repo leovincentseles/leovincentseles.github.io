@@ -212,5 +212,13 @@ markup:
         endLevel: 4
         ordered: true
         startLevel: 2
+
+    ## See the documentation: https://gohugo.io/content-management/syntax-highlighting/
     highlight:
+        codeFences: true
+        guessSyntax: true
+        hl_Lines: ""
+        lineNoStart: 1
+        lineNos: true        
         noClasses: false
+        tabwidth: 4
