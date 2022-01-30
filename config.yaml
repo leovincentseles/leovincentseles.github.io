@@ -219,7 +219,7 @@ markup:
         guessSyntax: true
         hl_Lines: ""
         lineNoStart: 1
-        lineNos: true   
+        lineNos: false   
         lineNumbersInTable: true
         noClasses: true
         style: monokai
