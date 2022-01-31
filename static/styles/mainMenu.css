@@ -1,0 +1,9 @@
+/* Modify the main menu color*/
+:root {
+    --body-text-color: #a8a8a8;
+}
+
+#main-menu {
+    font-size: 1.7rem;
+    font-weight: bold;
+}
