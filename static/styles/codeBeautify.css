@@ -13,11 +13,11 @@ table.lntable td+td {
 
 /* Radius border for the code block */
 div.chroma {
-    border-radius: 10px;
+    border-radius: 10px !important;
 }
 
 /* Compact style by removing the top and bottom space */
 pre.chroma {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
 }
