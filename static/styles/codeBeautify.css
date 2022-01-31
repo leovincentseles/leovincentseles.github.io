@@ -1,0 +1,23 @@
+/* LineNumbersTable */
+.chroma .lnt {
+    padding-left: 1.5em !important;
+    padding-right: 1.5em !important;
+    margin-right: 0 !important;
+}
+
+/* code column padding and add left border */
+table.lntable td+td {
+    border-left: 1px solid black !important;
+    padding-left: 20px !important;        
+}
+
+/* Radius border for the code block */
+div.chroma {
+    border-radius: 10px;
+}
+
+/* Compact style by removing the top and bottom space */
+pre.chroma {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
