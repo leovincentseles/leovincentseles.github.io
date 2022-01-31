@@ -93,7 +93,9 @@
 }
 
 /* Name */
-.chroma .n {}
+.chroma .n {
+    color: unset !important;
+}
 
 /* NameAttribute */
 .chroma .na {
@@ -101,10 +103,14 @@
 }
 
 /* NameBuiltin */
-.chroma .nb {}
+.chroma .nb {
+    color: unset !important;
+}
 
 /* NameBuiltinPseudo */
-.chroma .bp {}
+.chroma .bp {
+    color: unset !important;
+}
 
 /* NameClass */
 .chroma .nc {
@@ -122,7 +128,9 @@
 }
 
 /* NameEntity */
-.chroma .ni {}
+.chroma .ni {
+    color: unset !important;
+}
 
 /* NameException */
 .chroma .ne {
@@ -135,13 +143,19 @@
 }
 
 /* NameFunctionMagic */
-.chroma .fm {}
+.chroma .fm {
+    color: unset !important;
+}
 
 /* NameLabel */
-.chroma .nl {}
+.chroma .nl {
+    color: unset !important;
+}
 
 /* NameNamespace */
-.chroma .nn {}
+.chroma .nn {
+    color: unset !important;
+}
 
 /* NameOther */
 .chroma .nx {
@@ -149,7 +163,9 @@
 }
 
 /* NameProperty */
-.chroma .py {}
+.chroma .py {
+    color: unset !important;
+}
 
 /* NameTag */
 .chroma .nt {
@@ -157,19 +173,29 @@
 }
 
 /* NameVariable */
-.chroma .nv {}
+.chroma .nv {
+    color: unset !important;
+}
 
 /* NameVariableClass */
-.chroma .vc {}
+.chroma .vc {
+    color: unset !important;
+}
 
 /* NameVariableGlobal */
-.chroma .vg {}
+.chroma .vg {
+    color: unset !important;
+}
 
 /* NameVariableInstance */
-.chroma .vi {}
+.chroma .vi {
+    color: unset !important;
+}
 
 /* NameVariableMagic */
-.chroma .vm {}
+.chroma .vm {
+    color: unset !important;
+}
 
 /* Literal */
 .chroma .l {
@@ -297,7 +323,9 @@
 }
 
 /* Punctuation */
-.chroma .p {}
+.chroma .p {
+    color: unset !important;
+}
 
 /* Comment */
 .chroma .c {
