@@ -220,7 +220,7 @@ markup:
         hl_Lines: ""
         lineNoStart: 1
         lineNos: true   
-        lineNumbersInTable: true
+        lineNumbersInTable: false
         noClasses: false
         style: monokai
         tabWidth: 4
