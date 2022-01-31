@@ -28,12 +28,12 @@ image: LanYang-Museum.jpg
     
     → 找出陣列中最小的索引K，而且arr[k] ≥ 6，在這個例子中我們想要的到的k值就是2 (因為arr[2] ≥ 6)
     
-    ```cpp
-    arr = [1, 5, 7, 20]
-    bool condition(int val) {
-        return (val >= 6);
-    }
-    ```
+```cpp
+arr = [1, 5, 7, 20]
+bool condition(int val) {
+    return (val >= 6);
+}
+```
     
     | k | 0 | 1 | 2 | 3 |
     | --- | --- | --- | --- | --- |
