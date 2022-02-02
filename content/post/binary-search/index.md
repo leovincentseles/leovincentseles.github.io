@@ -13,30 +13,37 @@ image: LanYang-Museum.jpg
     2. `left`, `right` 兩個索引在算法執行前、執行中與執行後後分別會指向哪種元素?
 - 這篇文章將會描述`二元搜索法`的算法模板，以及介紹三種常見的`二元搜索法`問題
 
-## 模板
+## 基本模板
 
 - 模板是讀了[**jiah**](https://leetcode.com/jiah/)在Leetcode討論區下方的[**留言**](https://leetcode.com/discuss/general-discussion/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems/656934)之後理解整理出來
 - 我們先討論`二元搜索法`的基本模板，後續才會說明如何利用模板轉換成三種常見的`二元搜索法`問題
 
-### 基本模板
+### 基本模板說明
 
 > **目標:** 給定一個陣列`arr`，找出`最小的索引k`，使得`condition(arr[k])`結果為**true**。
 
-- 舉個例子: 找出陣列中第一個大於等於K的元素，
-
-    &rarr; 找出陣列中最小的索引K，而且arr[k] ≥ 6，在這個例子中我們想要的k就是2 (因為arr[2] ≥ 6)  
+- 舉個例子: 找出陣列中第一個大於等於6的元素，
+  - 用基本模板來看就是找出陣列中最小的索引K，而且arr[k] ≥ 6 (`condition函數`)
+  - 在這個例子中我們想要的k就是2 (因為arr[2] ≥ 6)  
 
     ```cpp
-    arr = [1, 5, 7, 20]
+    // The given array
+    vector<int> arr{1, 5, 7, 20};
+
+    // The condition function
     bool condition(int val) {
         return (val >= 6);
     }
     ```
 
-    | k | 0 | 1 | 2 | 3 |
-    | --- | --- | --- | --- | --- |
-    | arr[k] | 1 | 5 | 7 | 20 |
-    | condition(arr[k]) | false | false | true | true |
+- 在更深入討論基本模板之前，我們需要先了解模板的使用前提
+  - 在調用condition函數後**所有true發生的位置必須落在所有false的右邊**
+  - 合法的情境
+    - (前半部為false, 後半部為true)，**false, false, false, true, true, true**
+    - (全為false)，**false, false, false, false, false, false**
+    - (全為true)，**true, true, true, true, true, true**
+  - 不合法的情境
+    - **false, true, false, true, true**
 
 ### 循環不變量定義
 
