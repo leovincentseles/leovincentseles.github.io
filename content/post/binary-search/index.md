@@ -37,7 +37,7 @@ image: LanYang-Museum.jpg
     ```
 
 - 在更深入討論基本模板之前，我們需要先了解模板的使用前提，並設計適當的condition函數
-  - 在調用condition函數後**所有true發生的位置必須落在所有false的右邊**
+  - 調用condition函數後**所有true發生的位置必須落在所有false的右邊**
   - 合法的情形
     - (前半部為false, 後半部為true)，false, false, false, **true**, **true**, **true**
     - (全為false)，false, false, false, false, false, false
@@ -45,11 +45,15 @@ image: LanYang-Museum.jpg
   - 不合法的情形
     - false, **true**, false, **true**, **true**
 
-### 循環不變量定義
+### 循環不變量
 
-- 在實作二元搜索法之前，我們先定義清楚一些相關的循環不變量(**Loop Invariants**)，在二元搜索法執行前、執行中與執行後我們都需要遵守這些循環不變量的規則，而隨著這些麻煩的步驟也幫我們解決了兩個難點
+- 實作二元搜索法之前，我們先定義清楚一些相關的循環不變量(**Loop Invariants**)。
+- 在二元搜索法執行前、執行中與執行後我們都需要遵守這些循環不變量的規則，而這些麻煩的步驟也幫我們解決了兩個難點
   - 區間的定義
   - `二元搜索法`中被left和right指向的元素意義
+- $[left,\ right)$，所有 **$left \le index \lt right$** 之arr[index]為待檢測的元素
+- $(-\infty,\ left)$，所有 $-\infty \lt index \lt left$ 之arr[index]皆無法滿足condition函數(**false**)
+- $[right,\ +\infty)$，所有 $right \le index \lt +\infty$ 之arr[index]皆滿足condition函數(**true**)
 
 ## 五種二元搜索法
 
