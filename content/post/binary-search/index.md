@@ -48,10 +48,14 @@ math: true
 
 ### 循環不變量
 
-- 實作二元搜索法之前，我們先定義清楚一些相關的循環不變量(**Loop Invariants**)。
+- 實作二元搜索法之前，我們先定義清楚一些循環不變量(**Loop Invariants**)。
 - 在二元搜索法執行前、執行中與執行後我們都需要遵守這些循環不變量的規則，而這些麻煩的步驟也幫我們解決了兩個難點
   - 區間的定義
   - `二元搜索法`中被left和right指向的元素意義
+- 為了避免複雜的邊界條件，我們將原本的陣列範圍從原本的 \\([0, arr.size())\\)擴展至\\((-\infty, +\infty)\\)，並且要符合前提" 調用condition函數後**所有true發生的位置必須落在所有false的右邊**
+  - 擴展的元素中\\((-\infty, 0)\\) 皆無法滿足condition函數(**false**)
+  - 擴展的元素中\\([arr.size(), +\infty)\\) 皆滿足condition函數(**true**)
+- 接著定義了三個循環不變量
 - index \\(\in [left,\ right)\\) &rarr; **待檢測集合**
   - 所有`arr[index]`為待檢測的元素 \\((left \leq\\) index \\(< right)\\)
 - index \\(\in (-\infty,\ left)\\) &rarr; **false集合**
