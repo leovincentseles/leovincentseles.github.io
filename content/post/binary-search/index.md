@@ -88,9 +88,12 @@ int binarySearch(vector<int> &arr) {
   {{< highlight cpp "linenostart=7" >}}
 int left = 0, right = arr.size();{{< / highlight >}}
   - 待檢測集合為\\([0,\ arr.size())\\)，因此`left`設定為0，`right`設定為arr.size()。
-  - 檢查索引\\((-\infty,\ left) \rightarrow (-\infty,\ 0)\\)，為想像擴充的索引範圍，而且符合**Loop invariant**，在這個範圍condition(arr[index])皆為false。
-  - 檢查索引\\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\\)，為想像擴充的索引範圍，而且符合**Loop invariant**，在這個範圍condition(arr[index])皆為true。
-- 二元搜索執行過程中
+  - 索引\\((-\infty,\ left) \rightarrow (-\infty,\ 0)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為false。
+  - 索引\\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為true。
+- 二元搜索
+  - while迴圈的條件為執行直到沒有尚未檢測的元素，也就是 \\([left, right)\\) 至少有一個元素 \\((left < right)\\)
+    {{< highlight cpp "linenostart=9" >}}
+while (left < right) {{{< / highlight >}}
 - 二元搜索結束
 
 ## 三種二元搜索法
