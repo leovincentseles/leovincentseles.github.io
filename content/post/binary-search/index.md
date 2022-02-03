@@ -95,12 +95,16 @@ int left = 0, right = arr.size();{{< / highlight >}}
   {{< highlight cpp "linenostart=9" >}}
 while (left < right) {{{< / highlight >}}
     - 執行直到沒有尚未檢測的元素，也就是 \\([left, right)\\) 至少有一個元素 \\((left < right)\\)
-  - 如果arr[mid]符合conditionc函數
+  - 如果arr[mid]符合condition函數
   {{< highlight cpp "linenostart=12" >}}
 if (condition(arr[mid]) == true)
     right = mid;{{< / highlight >}}
-    - 對於所有大於等於mid的索引condition皆為true，我們可以透過`right = mid`更新**true集合**的範圍\\([right,\ \infty) \rightarrow [mid, \ \infty)\\)，同時待檢測集合也隨著`right`的更新而有新的範圍\\([left, right) \rightarrow [left, mid)\\)
-    - **condition(arr[right])必須為true，才符合true集合的定義**
+    - 對於所有大於等於mid的索引condition皆為true，而**true集合**範圍為\\([right,\ \infty)\\)，因此我們必須將`right`更新為`mid` (**condition(arr[right])必須為true**)。
+  - arr[mid]不符合condition函數
+  {{< highlight cpp "linenostart=14" >}}
+else
+    left = mid + 1;{{< / highlight >}}
+    - 對於所有小於等於mid的索引condition皆為false，而**false集合**範圍為\\((-\infty, left)\\)，因此我們必須將`left`更新為`mid+1` (更新後我們可以確保left-1是mid，而**arr[mid]不符合condition函數**)。
 
 - 二元搜索結束
 
