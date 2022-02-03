@@ -53,8 +53,8 @@ math: true
   - 區間的定義
   - `二元搜索法`中被left和right指向的元素意義
 - **[left, right)**，所有 **left &leq; index &lt; right** 之arr[index]為待檢測的元素
-- $(-\infty,\ left)$，所有 $-\infty \lt index \lt left$ 之arr[index]皆無法滿足condition函數(**false**)
-- $[right,\ +\infty)$，所有 $right \le index \lt +\infty$ 之arr[index]皆滿足condition函數(**true**)
+- **(-&infin;, left)**，所有 **-&infin; &lt; index &lt; left** 之arr[index]皆無法滿足condition函數(**false**)
+- **[right, +&infin;)**，所有 **right &le; index &lt; +&infin;** 之arr[index]皆滿足condition函數(**true**)
 
 ## 五種二元搜索法
 
