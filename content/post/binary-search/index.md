@@ -86,8 +86,7 @@ int binarySearch(vector<int> &arr) {
 
 - 二元搜索執行之前
   {{< highlight cpp "linenostart=7" >}}
-  int left = 0, right = arr.size();
-  {{< / highlight >}}
+int left = 0, right = arr.size();{{< / highlight >}}
 - 二元搜索執行過程中
 - 二元搜索結束
 
