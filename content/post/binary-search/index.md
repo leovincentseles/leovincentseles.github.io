@@ -55,6 +55,7 @@ math: true
 - **[left, right)**，所有 **left &leq; index &lt; right** 之arr[index]為待檢測的元素
 - **(-&infin;, left)**，所有 **-&infin; &lt; index &lt; left** 之arr[index]皆無法滿足condition函數(**false**)
 - **[right, +&infin;)**，所有 **right &le; index &lt; +&infin;** 之arr[index]皆滿足condition函數(**true**)
+- \((left,\ right)\) \((\infty,\ right)\)
 
 ## 五種二元搜索法
 
