@@ -55,9 +55,9 @@ math: true
 - index \\(\in [left,\ right)\\) &rarr; **待檢測集合**
   - 所有`arr[index]`為待檢測的元素 \\((left \leq\\) index \\(< right)\\)
 - index \\(\in (-\infty,\ left)\\) &rarr; **false集合**
-  - 所有`arr[index]`皆無法滿足condition函數(**false**) \\((-\infty < index < left)\\)
+  - 所有`arr[index]`皆無法滿足condition函數(**false**) \\((-\infty <\\) index \\(< left)\\)
 - index \\(\in [right,\ +\infty)\\) &rarr; **true集合**
-  - 所有`arr[index]`皆滿足condition函數(**true**) \\((right \leq index < \infty)\\)
+  - 所有`arr[index]`皆滿足condition函數(**true**) \\((right \leq\\) index \\(< \infty)\\)
 
 ## 五種二元搜索法
 
