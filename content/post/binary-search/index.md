@@ -87,6 +87,9 @@ int binarySearch(vector<int> &arr) {
 - 二元搜索執行之前
   {{< highlight cpp "linenostart=7" >}}
 int left = 0, right = arr.size();{{< / highlight >}}
+  - 待檢測集合為\\([0,\ arr.size())\\)，因此`left`設定為0，`right`設定為arr.size()。
+  - 檢查索引\\((-\infty,\ left) \rightarrow (-\infty,\ 0)\\)，為想像擴充的索引範圍，而且符合**Loop invariant**，在這個範圍condition(arr[index])皆為false。
+  - 檢查索引\\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\\)，為想像擴充的索引範圍，而且符合**Loop invariant**，在這個範圍condition(arr[index])皆為true。
 - 二元搜索執行過程中
 - 二元搜索結束
 
