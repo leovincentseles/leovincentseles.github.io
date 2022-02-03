@@ -62,7 +62,29 @@ math: true
 
 ### 實作
 
-## 五種二元搜索法
+```cpp
+// The condition function
+bool condition(int val) {
+    return (val >= 6);
+}
+
+int binarySearch(vector<int> &arr) {
+    int left = 0, right = arr.size();
+
+    while (left < right) {
+        int mid = left + (right - left) / 2;
+
+        if (condition(arr[mid]) == true)
+            right = mid;
+        else
+            left = mid + 1;
+    }
+
+    return left;
+}
+```
+
+## 三種二元搜索法
 
 ## Leetcode 相關題目
 
