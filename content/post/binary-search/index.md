@@ -49,7 +49,7 @@ math: true
 ### 循環不變量
 
 - 實作二元搜索法之前，我們先定義一些循環不變量(**Loop Invariants**)，執行前、執行中與執行後我們都需要遵守這些循環不變量的規則  
-- 為了避免複雜的邊界條件，我們將原本的陣列範圍從原本的 \\([0, arr.size())\\)擴展至\\((-\infty, +\infty)\\)，並且要符合前提: 調用condition函數後**所有true發生的位置必須落在所有false的右邊**
+- 為了避免複雜的邊界條件，我們將原本的陣列索引範圍從原本的 \\([0, arr.size())\\)想像擴展至\\((-\infty, +\infty)\\)，並且要符合前提: 調用condition函數後**所有true發生的位置必須落在所有false的右邊**
   - 擴展的陣列索引\\((-\infty,\ 0)\\) 皆無法滿足condition函數(**false**)
   - 擴展的陣列索引\\([arr.size(),\ +\infty)\\) 皆滿足condition函數(**true**)
 - 接著定義三個循環不變量(待檢測集合、false集合與true集合)
@@ -83,6 +83,13 @@ int binarySearch(vector<int> &arr) {
     return left;
 }
 ```
+
+- 二元搜索執行之前
+  {{< highlight cpp "linenostart=7" >}}
+  int left = 0, right = arr.size();
+  {{< / highlight >}}
+- 二元搜索執行過程中
+- 二元搜索結束
 
 ## 三種二元搜索法
 
