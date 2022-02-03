@@ -3,6 +3,7 @@ title: "Binary Search"
 date: 2022-01-30T18:15:41+08:00
 draft: false
 image: LanYang-Museum.jpg
+math: true
 ---
 
 ## 介紹
@@ -51,7 +52,7 @@ image: LanYang-Museum.jpg
 - 在二元搜索法執行前、執行中與執行後我們都需要遵守這些循環不變量的規則，而這些麻煩的步驟也幫我們解決了兩個難點
   - 區間的定義
   - `二元搜索法`中被left和right指向的元素意義
-- $[left,\ right)$，所有 **$left \le index \lt right$** 之arr[index]為待檢測的元素
+- **[left, right)**，所有 **left &leq; index &lt; right** 之arr[index]為待檢測的元素
 - $(-\infty,\ left)$，所有 $-\infty \lt index \lt left$ 之arr[index]皆無法滿足condition函數(**false**)
 - $[right,\ +\infty)$，所有 $right \le index \lt +\infty$ 之arr[index]皆滿足condition函數(**true**)
 
