@@ -91,13 +91,15 @@ int left = 0, right = arr.size();{{< / highlight >}}
   - 索引\\((-\infty,\ left) \rightarrow (-\infty,\ 0)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為false。
   - 索引\\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為true。
 - 二元搜索
-  - {{< highlight cpp "linenostart=9" >}}
+  - while迴圈的條件
+  {{< highlight cpp "linenostart=9" >}}
 while (left < right) {{{< / highlight >}}
-  - while迴圈的條件為執行直到沒有尚未檢測的元素，也就是 \\([left, right)\\) 至少有一個元素 \\((left < right)\\)
-  - {{< highlight cpp "linenostart=12" >}}
+    - 執行直到沒有尚未檢測的元素，也就是 \\([left, right)\\) 至少有一個元素 \\((left < right)\\)
+  - 如果arr[mid]符合conditionc函數
+  {{< highlight cpp "linenostart=12" >}}
 if (condition(arr[mid]) == true)
     right = mid;{{< / highlight >}}
-  - 如果arr[mid]符合condition函數，則對於所有大於等於mid的索引condition皆為true，我們可以透過`right = mid`更新**true集合**的範圍\\([right,\ \infty) \rightarrow [mid, \ \infty)\\)，同時待檢測集合也隨著`right`的更新而有新的範圍\\([left, right) \rightarrow [left, mid)\\)
+    - 對於所有大於等於mid的索引condition皆為true，我們可以透過`right = mid`更新**true集合**的範圍\\([right,\ \infty) \rightarrow [mid, \ \infty)\\)，同時待檢測集合也隨著`right`的更新而有新的範圍\\([left, right) \rightarrow [left, mid)\\)
     - **condition(arr[right])必須為true，才符合true集合的定義**
 
 - 二元搜索結束

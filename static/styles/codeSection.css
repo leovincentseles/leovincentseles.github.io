@@ -1,0 +1,5 @@
+/* Modify the code section color*/
+:root {
+    --code-text-color: #eb6c78;
+    --code-background-color: #ededeb;
+}
