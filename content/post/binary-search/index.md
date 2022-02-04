@@ -219,16 +219,39 @@ else
 
   - 找到第一個大於等於6的位置之後，我們想找得其實是最後一個6，所以要檢查得元素位置在 `left - 1`
     - 首先針對**邊界條件**做處理，如果 `left - 1 == -1` 代表沒有最後一個小於等於6的元素，直接回傳-1。
-    - 如果有找到最後一個小於等於6的元素(位置 `left - 1` )，檢查是否是6， `arr[left - 1] == 6` ，不是就回傳-1，如果真的是6才回傳位置 `left - 1`。
+    - 如果有找到最後一個小於等於6的元素(位置 `left - 1` ，第一個大於6的左邊)，檢查是否是6， `arr[left - 1] == 6` ，不是就回傳-1，如果真的是6才回傳位置 `left - 1`。
 
 ### 尋找陣列中任一個6
 
 > **目標:** 給定一個升序排列的陣列**arr**，找出並回傳**任一個6所在的位置**，**找不到則回傳-1**
 
+- 設計condition函數使得右半邊為**true**，左半邊為**false**
+- 但是這次要找得是任一個6，原本condition函數定義為**大於等於6**，現在如果發現**等於6**就可以直接回傳位置了
+
+  ```cpp
+  int binarySearch(vector<int> &arr) {
+      int left = 0, right = arr.size();
+
+      while (left < right) {
+          int mid = left + (right - left) / 2;
+
+          if (arr[mid] == 6)
+              return mid;
+          else if (arr[mid] > 6)
+              right = mid;
+          else
+              left = mid + 1;
+      }
+
+      return -1;
+  }
+  ```
+
 ## Leetcode 相關題目
 
 ### 依照索引搜尋 (Search by Index)
 
+- **[Leetcode 35. Search Insert Position](https://leetcode.com/problems/search-insert-position/)**
 - **[Leetcode 1146. Snapshot Array](https://leetcode.com/problems/snapshot-array/)**
 
 ### 依照範圍可能搜尋 (Search by space)
