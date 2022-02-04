@@ -81,6 +81,9 @@ int binarySearch(vector<int> &arr) {
             left = mid + 1;
     }
 
+    if (left == arr.size())
+        printf("Cannot find a valid element\n");                
+
     return left;
 }
 ```
@@ -118,9 +121,19 @@ else
 - **索引left和right**
   - 在結束了while迴圈，可以確定的是 \\(left \geq right \\)，而透過以下分析我們可以知道其實 **\\(left\\) 和 \\(right\\) 會指向同個地方**
     - 每次進入迴圈，三個索引之間的關係是 \\(left \leq mid < right\\)，而且程式碼中只有兩種索引更新方式
-    - `right = mid`: 執行完後的結果會是 \\(left < right (left \neq mid)\\) 或 \\(left = right (left = mid)\\)
-    - `left = mid + 1`: 執行完後的結果會是 \\(left < right (mid < right-1)\\) 或 \\(left = right (mid = right-1)\\)
+    - `right = mid`: 執行完後的結果會是 \\(left < right\ (left \neq mid)\\) 或 \\(left = right\ (left = mid)\\)
+    - `left = mid + 1`: 執行完後的結果會是 \\(left < right\ (mid < right-1)\\) 或 \\(left = right\ (mid = right-1)\\)
     - 更新完索引之後如果 \\(left = right\\)，就會結束迴圈，所以不會有 \\(left > right \\) 的可能性。
+  - `left` 和 `right` 指向的地方
+    - 從上面分析可以得出兩個索引最後會共同指向一個地方
+    - 從每次迴圈都維護的循環不變量**false集合**與**true集合**，我們可以分析
+      - \\((-\infty,\ left)\\)為**false集合**，left和right共同指向的左側(**不包含**)condition皆為**false**。
+      - \\([right,\ \infty)\\)為**true集合**，left和right共同指向的右側(**包含**)condition皆為**true**。
+    - `left` 和 `right` 會共同指向**滿足condition的最小索引**
+- **邊界條件**
+  1. 如果是空陣列(`arr.size() = 0`)， `left` 和 `right` 都會被初始化為 `0`，不會進到 while迴圈
+  2. 如果陣列所有元素經過condition函數都是 `false`, `left` 和 `right` 最後會指到 `arr.size()`，代表找不到
+  3. 如果陣列所有元素經過condition函數都是 `true`, `left` 和 `right` 都會指到 `0`
 
 ## 三種二元搜索法
 
