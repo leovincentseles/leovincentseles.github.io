@@ -18,6 +18,22 @@ DefaultContentLanguage: en
 # This will make .Summary and .WordCount behave correctly for CJK languages.
 hasCJKLanguage: false
 
+frontmatter:
+    date:
+        - date
+        - publishDate
+        - lastmod
+    expiryDate:
+        - expiryDate
+    lastmod:
+        - :git
+        - lastmod
+        - date
+        - publishDate
+    publishDate:
+        - publishDate
+        - date
+
 permalinks:
     post: /posts/:slug/
     page: /:slug/
