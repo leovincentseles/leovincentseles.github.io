@@ -91,6 +91,7 @@ int left = 0, right = arr.size();{{< / highlight >}}
   - 待檢測集合為\\([0,\ arr.size())\\)，因此`left`設定為0，`right`設定為arr.size()。
   - 索引\\((-\infty,\ left) \rightarrow (-\infty,\ 0)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為**false**。
   - 索引\\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為**true**。
+
 - 二元搜索
   - while迴圈的條件
   {{< highlight cpp "linenostart=9" >}}
@@ -108,6 +109,11 @@ else
     - 因為有前提的保證(**所有true發生的位置必須落在所有false的右邊**)，所以對於所有小於等於mid的索引調用condition函數都是false，而**false集合**範圍為\\((-\infty, left)\\)，因此我們必須將`left`更新為`mid+1` (更新後我們可以確保left-1是原本的mid，而**condition(arr[mid])為false**)。
 
 - 二元搜索結束
+  - **收斂性**
+    - 二元搜索法最怕的就是無窮迴圈(infinite loop)，而這裏只要能夠說明在每次迴圈**待搜索範圍至少減一**，就知道不會發生無窮迴圈。
+    - 在進入迴圈的時候，\\(left < right\\)，而且\\(mid = \frac{left + right}{2}\\)用的是integer的除法，所以這三個索引之間的關係是 \\(left \leq mid < right\\)。
+    - 在迴圈中只有兩種索引更新，`right = mid`或是`left = mid + 1`，因為 `right` 不等於 `mid` ，所以`right`的更新讓待搜索範圍至少減一，而`left`的更新也很明顯的滿足
+    - 在搜索範圍為空集合時，迴圈的條件不會滿足，因此不可能發生無窮迴圈
 
 ## 三種二元搜索法
 
