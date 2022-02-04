@@ -130,10 +130,13 @@ else
       - \\((-\infty,\ left)\\)為**false集合**，left和right共同指向的左側(**不包含**)condition皆為**false**。
       - \\([right,\ \infty)\\)為**true集合**，left和right共同指向的右側(**包含**)condition皆為**true**。
     - `left` 和 `right` 會共同指向**滿足condition的最小索引**
-- **邊界條件**
+- **邊界條件分析**
   1. 如果是空陣列(`arr.size() = 0`)， `left` 和 `right` 都會被初始化為 `0`，不會進到 while迴圈
   2. 如果陣列所有元素經過condition函數都是 `false`, `left` 和 `right` 最後會指到 `arr.size()`，代表找不到
   3. 如果陣列所有元素經過condition函數都是 `true`, `left` 和 `right` 都會指到 `0`
+
+- **邊界條件處理**
+  - 針對1. 2.兩種可能可以檢查`left == arr.size()`，再做對應處理
 
 ## 三種二元搜索法
 
