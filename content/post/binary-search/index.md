@@ -16,16 +16,16 @@ math: true
 
 ## 基本模板
 
-- 模板是讀了[**jiah**](https://leetcode.com/jiah/)在Leetcode討論區下方的[**留言**](https://leetcode.com/discuss/general-discussion/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems/656934)之後理解整理出來
-- 我們先討論`二元搜索法`的基本模板，後續才會說明如何利用模板轉換成三種常見的`二元搜索法`問題
+- 模板是讀了[**jiah**](https://leetcode.com/jiah/)在Leetcode討論區下方的[**留言**](https://leetcode.com/discuss/general-discussion/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems/656934)之後整理出來
+- 先討論`二元搜索法`的基本模板，後續才會說明如何利用模板轉換成三種常見的`二元搜索法`問題
 
 ### 基本模板說明
 
 > **目標:** 給定一個陣列`arr`，找出`最小的索引k`，使得`condition(arr[k])`結果為**true**。
 
 - 舉個例子: 找出陣列中第一個大於等於6的元素，
-  - 用基本模板來看就是找出陣列中最小的索引k，而且arr[k] ≥ 6 (`condition函數`)
-  - 在這個例子中我們想要的k就是2 (因為arr[2] ≥ 6)  
+  - 用基本模板說明就是找出陣列中最小的索引k，而且arr[k] ≥ 6 (`condition函數`)
+  - 在這個例子(下方程式碼)中我們想要的k就是2 (因為arr[2] ≥ 6)  
 
     ```cpp
     // The given array
@@ -38,27 +38,28 @@ math: true
     ```
 
 - 在更深入討論基本模板之前，我們需要先了解模板的使用前提，並設計適當的condition函數
-  - 調用condition函數後**所有true發生的位置必須落在所有false的右邊**
+  - **前提**: 調用condition函數後**所有true發生的位置必須落在所有false的右邊**
   - 合法的情形
     - (前半部為false, 後半部為true)，false, false, false, **true**, **true**, **true**
     - (全為false)，false, false, false, false, false, false
     - (全為true)，**true**, **true**, **true**, **true**, **true**, **true**
-  - 不合法的情形
+  - 不合法的情形: 有的**true**出現在false左邊
     - false, **true**, false, **true**, **true**
 
 ### 循環不變量
 
 - 實作二元搜索法之前，我們先定義一些循環不變量(**Loop Invariants**)，執行前、執行中與執行後我們都需要遵守這些循環不變量的規則  
-- 為了避免複雜的邊界條件，我們將原本的陣列索引範圍從原本的 \\([0, arr.size())\\)想像擴展至\\((-\infty, +\infty)\\)，並且要符合前提: 調用condition函數後**所有true發生的位置必須落在所有false的右邊**
+- 為了避免複雜的邊界條件，我們將陣列索引範圍從原本的 \\([0, arr.size())\\)想像往左和右擴展至\\((-\infty, +\infty)\\)，同時也要符合前提: 調用condition函數後**所有true發生的位置必須落在所有false的右邊**，也就是
   - 擴展的陣列索引\\((-\infty,\ 0)\\) 皆無法滿足condition函數(**false**)
   - 擴展的陣列索引\\([arr.size(),\ +\infty)\\) 皆滿足condition函數(**true**)
 - 接著定義三個循環不變量(待檢測集合、false集合與true集合)
 - index \\(\in [left,\ right)\\) &rarr; **待檢測集合**
-  - 所有`arr[index]`為待檢測的元素 \\((left \leq\\) index \\(< right)\\)
+  - 在這段索引範圍的`arr[index]`為待檢測的元素 \\((left \leq\\) index \\(< right)\\)
 - index \\(\in (-\infty,\ left)\\) &rarr; **false集合**
-  - 所有`arr[index]`皆無法滿足condition函數(**false**) \\((-\infty <\\) index \\(< left)\\)
+  - 在這段索引範圍的`arr[index]`皆無法滿足condition函數(**false**) \\((-\infty <\\) index \\(< left)\\)
 - index \\(\in [right,\ +\infty)\\) &rarr; **true集合**
-  - 所有`arr[index]`皆滿足condition函數(**true**) \\((right \leq\\) index \\(< \infty)\\)
+  - 在這段索引範圍的`arr[index]`皆滿足condition函數(**true**) \\((right \leq\\) index \\(< \infty)\\)
+- 定義完相關的循環不變量，接著就是照著規則實作
 
 ### 實作
 
@@ -88,23 +89,23 @@ int binarySearch(vector<int> &arr) {
   {{< highlight cpp "linenostart=7" >}}
 int left = 0, right = arr.size();{{< / highlight >}}
   - 待檢測集合為\\([0,\ arr.size())\\)，因此`left`設定為0，`right`設定為arr.size()。
-  - 索引\\((-\infty,\ left) \rightarrow (-\infty,\ 0)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為false。
-  - 索引\\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為true。
+  - 索引\\((-\infty,\ left) \rightarrow (-\infty,\ 0)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為**false**。
+  - 索引\\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\\) 符合**Loop invariant**，在這個範圍condition(arr[index])皆為**true**。
 - 二元搜索
   - while迴圈的條件
   {{< highlight cpp "linenostart=9" >}}
 while (left < right) {{{< / highlight >}}
-    - 執行直到沒有尚未檢測的元素，也就是 \\([left, right)\\) 至少有一個元素 \\((left < right)\\)
+    - 還有尚未檢測的元素就要繼續執行，也就是**待檢測集合**: \\([left, right)\\) 至少有一個元素 \\((left < right)\\)
   - 如果arr[mid]符合condition函數
   {{< highlight cpp "linenostart=12" >}}
 if (condition(arr[mid]) == true)
     right = mid;{{< / highlight >}}
-    - 對於所有大於等於mid的索引condition皆為true，而**true集合**範圍為\\([right,\ \infty)\\)，因此我們必須將`right`更新為`mid` (**condition(arr[right])必須為true**)。
+    - 因為有前提的保證(**所有true發生的位置必須落在所有false的右邊**)，所以對於所有大於等於mid的索引調用condition函數都是true，而**true集合**範圍為\\([right,\ \infty)\\)，因此我們必須將`right`更新為`mid`。
   - arr[mid]不符合condition函數
   {{< highlight cpp "linenostart=14" >}}
 else
     left = mid + 1;{{< / highlight >}}
-    - 對於所有小於等於mid的索引condition皆為false，而**false集合**範圍為\\((-\infty, left)\\)，因此我們必須將`left`更新為`mid+1` (更新後我們可以確保left-1是mid，而**arr[mid]不符合condition函數**)。
+    - 因為有前提的保證(**所有true發生的位置必須落在所有false的右邊**)，所以對於所有小於等於mid的索引調用condition函數都是false，而**false集合**範圍為\\((-\infty, left)\\)，因此我們必須將`left`更新為`mid+1` (更新後我們可以確保left-1是原本的mid，而**condition(arr[mid])為false**)。
 
 - 二元搜索結束
 
