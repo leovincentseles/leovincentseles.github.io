@@ -108,12 +108,19 @@ else
     left = mid + 1;{{< / highlight >}}
     - 因為有前提的保證(**所有true發生的位置必須落在所有false的右邊**)，所以對於所有小於等於mid的索引調用condition函數都是false，而**false集合**範圍為\\((-\infty, left)\\)，因此我們必須將`left`更新為`mid+1` (更新後我們可以確保left-1是原本的mid，而**condition(arr[mid])為false**)。
 
-- 二元搜索結束
-  - **收斂性**
-    - 二元搜索法最怕的就是無窮迴圈(infinite loop)，而只要算法能夠在每次迴圈將**待搜索範圍至少減一**，就不會發生無窮迴圈。
-    - 在進入迴圈的時候，\\(left < right\\)，而且 \\(mid = \frac{left + right}{2}\\) 用的是整數除法，所以這三個索引之間的關係是 \\(left \leq mid < right\\)。
-    - 在迴圈中只有兩種索引更新，`right = mid`或是`left = mid + 1`，因為 `right` 不等於 `mid` ，所以`right`的更新會讓待搜索範圍至少減一，而`left`的更新也很明顯會讓待搜索範圍至少減一。
-    - 在搜索範圍為空集合時，迴圈的條件 \\(left < right\\) 不會滿足，因此不可能發生無窮迴圈
+### 分析
+
+- **收斂性**
+  - 二元搜索法最怕的就是無窮迴圈(infinite loop)，而只要算法能夠在每次迴圈將**待搜索範圍至少減一**，就不會發生無窮迴圈。
+  - 在進入迴圈的時候，\\(left < right\\)，而且 \\(mid = \frac{left + right}{2}\\) 用的是整數除法，所以這三個索引之間的關係是 \\(left \leq mid < right\\)。
+  - 在迴圈中只有兩種索引更新，`right = mid`或是`left = mid + 1`，因為 `right` 不等於 `mid` ，所以`right`的更新會讓待搜索範圍至少減一，而`left`的更新也很明顯會讓待搜索範圍至少減一。
+  - 在搜索範圍為空集合時，迴圈的條件 \\(left < right\\) 不會滿足，因此不可能發生無窮迴圈
+- **索引left和right**
+  - 在結束了while迴圈，可以確定的是 \\(left \geq right \\)，而透過以下分析我們可以知道其實 **\\(left\\) 和 \\(right\\) 會指向同個地方**
+    - 每次進入迴圈，三個索引之間的關係是 \\(left \leq mid < right\\)，而且程式碼中只有兩種索引更新方式
+    - `right = mid`: 執行完後的結果會是 \\(left < right (left \neq mid)\\) 或 \\(left = right (left = mid)\\)
+    - `left = mid + 1`: 執行完後的結果會是 \\(left < right (mid < right-1)\\) 或 \\(left = right (mid = right-1)\\)
+    - 更新完索引之後如果 \\(left = right\\)，就會結束迴圈，所以不會有 \\(left > right \\) 的可能性。
 
 ## 三種二元搜索法
 
