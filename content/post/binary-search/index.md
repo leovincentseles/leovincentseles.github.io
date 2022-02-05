@@ -2,11 +2,10 @@
 author: "leovincentseles"
 title: "Binary Search"
 date: 2022-01-30T18:15:41+08:00
-description: "Binary Search Template"
+description: "Explore the insight of binary search and provide a template code for implementation "
 categories:
     - "Leetcode"
-    - "Algorithm"
-    - "Template"
+    - "Algorithm"  
 tags:
     - "Programming"
     - "C++"
