@@ -4,12 +4,12 @@ title: "Binary Search"
 date: 2022-01-30T18:15:41+08:00
 description: "Binary Search Template"
 categories:
-  "Leetcode"
-  "Algorithm"
-  "Template"
+    - "Leetcode"
+    - "Algorithm"
+    - "Template"
 tags:
-  "Programming"
-  "C++"
+    - "Programming"
+    - "C++"
 draft: false
 image: LanYang-Museum.jpg
 math: true
