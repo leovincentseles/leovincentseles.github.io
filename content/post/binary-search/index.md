@@ -1,7 +1,6 @@
 ---
 title: "Binary Search"
 date: 2022-01-30T18:15:41+08:00
-lastmod: 2022-01-30T18:15:41+08:00
 draft: false
 image: LanYang-Museum.jpg
 math: true
