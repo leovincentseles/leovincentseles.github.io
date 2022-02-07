@@ -37,3 +37,7 @@ pre.chroma {
     border: 10px solid #272822 !important;
     border-radius: 10px !important;
 }
+
+button.copyCodeButton {
+    top: 5px !important;
+}
