@@ -1,0 +1,1054 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yin-Chiuan Chen</title><link>https://leovincentseles.github.io/</link><description>Recent content on Yin-Chiuan Chen</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 30 Jan 2022 18:15:41 +0800</lastBuildDate><atom:link href="https://leovincentseles.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Introduction to Binary Search</title><link>https://leovincentseles.github.io/posts/binary-search/</link><pubDate>Sun, 30 Jan 2022 18:15:41 +0800</pubDate><guid>https://leovincentseles.github.io/posts/binary-search/</guid><description>&lt;img src="https://leovincentseles.github.io/posts/binary-search/LanYang-Museum.jpg" alt="Featured image of post Introduction to Binary Search" />&lt;h2 id="介紹">介紹&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>二元搜索法&lt;/code> (Binary Search) 是大家剛接觸程式設計就學習到的演算法，但是一點也不簡單，是標準的一看就會一寫就廢類型 (&lt;a class="link" href="https://programmercarl.com/0704.%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE.html#_704-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE" target="_blank" rel="noopener"
+>&lt;strong>引自代碼隨想錄&lt;/strong>&lt;/a>)，寫不好的原因有兩個
+&lt;ol>
+&lt;li>區間的定義
+&lt;ul>
+&lt;li>&lt;code>[left, right]&lt;/code>, &lt;code>[left, right)&lt;/code>, &lt;code>(left, right]&lt;/code>, &lt;code>(left, right)&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>left&lt;/code>, &lt;code>right&lt;/code> 兩個索引在算法執行前、執行中與執行後後分別會指向哪種元素?&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>這篇文章將會描述&lt;code>二元搜索法&lt;/code>的算法模板，以及介紹三種常見的&lt;code>二元搜索法&lt;/code>問題&lt;/li>
+&lt;/ul>
+&lt;h2 id="基本模板">基本模板&lt;/h2>
+&lt;ul>
+&lt;li>模板是讀了&lt;a class="link" href="https://leetcode.com/jiah/" target="_blank" rel="noopener"
+>&lt;strong>jiah&lt;/strong>&lt;/a>在Leetcode討論區下方的&lt;a class="link" href="https://leetcode.com/discuss/general-discussion/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems/656934" target="_blank" rel="noopener"
+>&lt;strong>留言&lt;/strong>&lt;/a>之後整理出來&lt;/li>
+&lt;li>先討論&lt;code>二元搜索法&lt;/code>的基本模板，後續才會說明如何利用模板轉換成三種常見的&lt;code>二元搜索法&lt;/code>問題&lt;/li>
+&lt;/ul>
+&lt;h3 id="基本模板說明">基本模板說明&lt;/h3>
+&lt;blockquote>
+&lt;p>&lt;strong>目標:&lt;/strong> 給定一個陣列&lt;code>arr&lt;/code>，找出&lt;code>最小的索引k&lt;/code>，使得&lt;code>condition(arr[k])&lt;/code>結果為&lt;strong>true&lt;/strong>。&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>舉個例子: 找出陣列中第一個大於等於6的元素，&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>用基本模板說明就是找出陣列中最小的索引k，而且arr[k] ≥ 6 (&lt;code>condition函數&lt;/code>)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>在這個例子(下方程式碼)中我們想要的k就是2 (因為arr[2] ≥ 6)&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="c1">// The given array
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="n">vector&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">7&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">20&lt;/span>&lt;span class="p">};&lt;/span>
+&lt;span class="c1">// The condition function
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kt">bool&lt;/span> &lt;span class="nf">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">val&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">val&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>在更深入討論基本模板之前，我們需要先了解模板的使用前提，並設計適當的condition函數&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>前提&lt;/strong>: 調用condition函數後&lt;strong>所有true發生的位置必須落在所有false的右邊&lt;/strong>&lt;/li>
+&lt;li>合法的情形
+&lt;ul>
+&lt;li>(前半部為false, 後半部為true)，false, false, false, &lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>&lt;/li>
+&lt;li>(全為false)，false, false, false, false, false, false&lt;/li>
+&lt;li>(全為true)，&lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>不合法的情形: 有的&lt;strong>true&lt;/strong>出現在false左邊
+&lt;ul>
+&lt;li>false, &lt;strong>true&lt;/strong>, false, &lt;strong>true&lt;/strong>, &lt;strong>true&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="循環不變量">循環不變量&lt;/h3>
+&lt;ul>
+&lt;li>實作二元搜索法之前，我們先定義一些循環不變量(&lt;strong>Loop Invariants&lt;/strong>)，執行前、執行中與執行後我們都需要遵守這些循環不變量的規則&lt;/li>
+&lt;li>為了避免複雜的邊界條件，我們將陣列索引範圍從原本的 \([0, arr.size())\)想像往左和右擴展至\((-\infty, +\infty)\)，同時也要符合前提: 調用condition函數後&lt;strong>所有true發生的位置必須落在所有false的右邊&lt;/strong>，也就是
+&lt;ul>
+&lt;li>擴展的陣列索引\((-\infty,\ 0)\) 皆無法滿足condition函數(&lt;strong>false&lt;/strong>)&lt;/li>
+&lt;li>擴展的陣列索引\([arr.size(),\ +\infty)\) 皆滿足condition函數(&lt;strong>true&lt;/strong>)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>接著定義三個循環不變量(待檢測集合、false集合與true集合)&lt;/li>
+&lt;li>index \(\in [left,\ right)\) → &lt;strong>待檢測集合&lt;/strong>
+&lt;ul>
+&lt;li>在這段索引範圍的&lt;code>arr[index]&lt;/code>為待檢測的元素 \((left \leq\) index \(&amp;lt; right)\)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>index \(\in (-\infty,\ left)\) → &lt;strong>false集合&lt;/strong>
+&lt;ul>
+&lt;li>在這段索引範圍的&lt;code>arr[index]&lt;/code>皆無法滿足condition函數(&lt;strong>false&lt;/strong>) \((-\infty &amp;lt;\) index \(&amp;lt; left)\)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>index \(\in [right,\ +\infty)\) → &lt;strong>true集合&lt;/strong>
+&lt;ul>
+&lt;li>在這段索引範圍的&lt;code>arr[index]&lt;/code>皆滿足condition函數(&lt;strong>true&lt;/strong>) \((right \leq\) index \(&amp;lt; \infty)\)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>定義完相關的循環不變量，接著就是照著規則實作&lt;/li>
+&lt;/ul>
+&lt;h3 id="實作">實作&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="c1">// The condition function
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="kt">bool&lt;/span> &lt;span class="nf">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">val&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">val&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="nf">binarySearch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vector&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">right&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">right&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">left&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">mid&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nb">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">else&lt;/span>
+&lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">())&lt;/span>
+&lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Cannot find a valid element&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">left&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>
+&lt;p>二元搜索執行之前
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="kt">int&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">();&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/p>
+&lt;ul>
+&lt;li>待檢測集合為\([0,\ arr.size())\)，因此&lt;code>left&lt;/code>設定為0，&lt;code>right&lt;/code>設定為arr.size()。&lt;/li>
+&lt;li>索引\((-\infty,\ left) \rightarrow (-\infty,\ 0)\) 符合&lt;strong>Loop invariant&lt;/strong>，在這個範圍condition(arr[index])皆為&lt;strong>false&lt;/strong>。&lt;/li>
+&lt;li>索引\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\) 符合&lt;strong>Loop invariant&lt;/strong>，在這個範圍condition(arr[index])皆為&lt;strong>true&lt;/strong>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>二元搜索&lt;/p>
+&lt;ul>
+&lt;li>while迴圈的條件
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">right&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>
+&lt;ul>
+&lt;li>還有尚未檢測的元素就要繼續執行，也就是&lt;strong>待檢測集合&lt;/strong>: \([left, right)\) 至少有一個元素 \((left &amp;lt; right)\)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>如果arr[mid]符合condition函數
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">mid&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="nb">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span>&lt;span class="p">;&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>
+&lt;ul>
+&lt;li>因為有前提的保證(&lt;strong>所有true發生的位置必須落在所有false的右邊&lt;/strong>)，所以對於所有大於等於mid的索引調用condition函數都是true，而&lt;strong>true集合&lt;/strong>範圍為\([right,\ \infty)\)，因此我們必須將&lt;code>right&lt;/code>更新為&lt;code>mid&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>arr[mid]不符合condition函數
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="k">else&lt;/span>
+&lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>
+&lt;ul>
+&lt;li>因為有前提的保證(&lt;strong>所有true發生的位置必須落在所有false的右邊&lt;/strong>)，所以對於所有小於等於mid的索引調用condition函數都是false，而&lt;strong>false集合&lt;/strong>範圍為\((-\infty, left)\)，因此我們必須將&lt;code>left&lt;/code>更新為&lt;code>mid+1&lt;/code> (更新後我們可以確保left-1是原本的mid，而&lt;strong>condition(arr[mid])為false&lt;/strong>)。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="分析">分析&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>收斂性&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>二元搜索法最怕的就是無窮迴圈(infinite loop)，而只要算法能夠在每次迴圈將&lt;strong>待搜索範圍至少減一&lt;/strong>，就不會發生無窮迴圈。&lt;/li>
+&lt;li>在進入迴圈的時候，\(left &amp;lt; right\)，而且 \(mid = \frac{left + right}{2}\) 用的是整數除法，所以這三個索引之間的關係是 \(left \leq mid &amp;lt; right\)。&lt;/li>
+&lt;li>在迴圈中只有兩種索引更新，&lt;code>right = mid&lt;/code>或是&lt;code>left = mid + 1&lt;/code>，因為 &lt;code>right&lt;/code> 不等於 &lt;code>mid&lt;/code> ，所以&lt;code>right&lt;/code>的更新會讓待搜索範圍至少減一，而&lt;code>left&lt;/code>的更新也很明顯會讓待搜索範圍至少減一。&lt;/li>
+&lt;li>在搜索範圍為空集合時，迴圈的條件 \(left &amp;lt; right\) 不會滿足，因此不可能發生無窮迴圈&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>索引left和right&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>在結束了while迴圈，可以確定的是 \(left \geq right \)，而透過以下分析我們可以知道其實 &lt;strong>\(left\) 和 \(right\) 會指向同個地方&lt;/strong>
+&lt;ul>
+&lt;li>每次進入迴圈，三個索引之間的關係是 \(left \leq mid &amp;lt; right\)，而且程式碼中只有兩種索引更新方式&lt;/li>
+&lt;li>&lt;code>right = mid&lt;/code>: 執行完後的結果會是 \(left &amp;lt; right\ (left \neq mid)\) 或 \(left = right\ (left = mid)\)&lt;/li>
+&lt;li>&lt;code>left = mid + 1&lt;/code>: 執行完後的結果會是 \(left &amp;lt; right\ (mid &amp;lt; right-1)\) 或 \(left = right\ (mid = right-1)\)&lt;/li>
+&lt;li>更新完索引之後如果 \(left = right\)，就會結束迴圈，所以不會有 \(left &amp;gt; right \) 的可能性。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>left&lt;/code> 和 &lt;code>right&lt;/code> 指向的地方
+&lt;ul>
+&lt;li>從上面分析可以得出兩個索引最後會共同指向一個地方&lt;/li>
+&lt;li>從每次迴圈都維護的循環不變量&lt;strong>false集合&lt;/strong>與&lt;strong>true集合&lt;/strong>，我們可以分析
+&lt;ul>
+&lt;li>\((-\infty,\ left)\)為&lt;strong>false集合&lt;/strong>，left和right共同指向的左側(&lt;strong>不包含&lt;/strong>)condition皆為&lt;strong>false&lt;/strong>。&lt;/li>
+&lt;li>\([right,\ \infty)\)為&lt;strong>true集合&lt;/strong>，left和right共同指向的右側(&lt;strong>包含&lt;/strong>)condition皆為&lt;strong>true&lt;/strong>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>left&lt;/code> 和 &lt;code>right&lt;/code> 會共同指向&lt;strong>滿足condition的最小索引&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>邊界條件分析&lt;/strong>&lt;/p>
+&lt;ol>
+&lt;li>如果是空陣列(&lt;code>arr.size() = 0&lt;/code>)， &lt;code>left&lt;/code> 和 &lt;code>right&lt;/code> 都會被初始化為 &lt;code>0&lt;/code>，不會進到 while迴圈&lt;/li>
+&lt;li>如果陣列所有元素經過condition函數都是 &lt;code>false&lt;/code>, &lt;code>left&lt;/code> 和 &lt;code>right&lt;/code> 最後會指到 &lt;code>arr.size()&lt;/code>，代表找不到&lt;/li>
+&lt;li>如果陣列所有元素經過condition函數都是 &lt;code>true&lt;/code>, &lt;code>left&lt;/code> 和 &lt;code>right&lt;/code> 都會指到 &lt;code>0&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>邊界條件處理&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>針對1. 2.兩種可能可以檢查&lt;code>left == arr.size()&lt;/code>，再做對應處理&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="三種二元搜索法問題">三種二元搜索法問題&lt;/h2>
+&lt;ul>
+&lt;li>接著要介紹的是三種常見的&lt;code>二元搜索法&lt;/code>問題&lt;/li>
+&lt;li>幸運的是三種問題都可以從基本模板做稍微修改就可以解決。&lt;/li>
+&lt;/ul>
+&lt;h3 id="尋找陣列中第一個6">尋找陣列中第一個6&lt;/h3>
+&lt;blockquote>
+&lt;p>&lt;strong>目標:&lt;/strong> 給定一個升序排列的陣列&lt;strong>arr&lt;/strong>，找出並回傳&lt;strong>第一個6所在的位置&lt;/strong>，&lt;strong>找不到則回傳-1&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>設計condition函數使得右半邊為&lt;strong>true&lt;/strong>，左半邊為&lt;strong>false&lt;/strong>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="kt">bool&lt;/span> &lt;span class="nf">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">val&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">val&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>套用基本模板，找到第一個符合condition函數的位置&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="kt">int&lt;/span> &lt;span class="nf">binarySearch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vector&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">right&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">right&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">left&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">mid&lt;/span>&lt;span class="p">]))&lt;/span>
+&lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">else&lt;/span>
+&lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">left&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">left&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>找到第一個大於等於6的位置之後
+&lt;ul>
+&lt;li>首先針對&lt;strong>邊界條件&lt;/strong>做處理， &lt;code>left == arr.size()&lt;/code> 代表找不到直接回傳-1。&lt;/li>
+&lt;li>如果有找到第一個大於等於6的元素，檢查是否是6， &lt;code>arr[left] == 6&lt;/code> ，不是就回傳-1，如果真的是6才回傳位置 &lt;code>left&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="尋找陣列中最後一個6">尋找陣列中最後一個6&lt;/h3>
+&lt;blockquote>
+&lt;p>&lt;strong>目標:&lt;/strong> 給定一個升序排列的陣列&lt;strong>arr&lt;/strong>，找出並回傳&lt;strong>最後一個6所在的位置&lt;/strong>，&lt;strong>找不到則回傳-1&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>設計condition函數使得右半邊為&lt;strong>true&lt;/strong>，左半邊為&lt;strong>false&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>但是這次要找得是最後一個6，所以我們稍微修改了一下condition函數，目標是找到第一個大於6的位置，再做後續處理&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="kt">bool&lt;/span> &lt;span class="nf">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">val&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">val&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>套用基本模板，找到第一個大於6(符合condition函數)的位置&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="kt">int&lt;/span> &lt;span class="nf">binarySearch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vector&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">right&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">right&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">left&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">condition&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">mid&lt;/span>&lt;span class="p">]))&lt;/span>
+&lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">else&lt;/span>
+&lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ul>
+&lt;li>找到第一個大於等於6的位置之後，我們想找得其實是最後一個6，所以要檢查得元素位置在 &lt;code>left - 1&lt;/code>
+&lt;ul>
+&lt;li>首先針對&lt;strong>邊界條件&lt;/strong>做處理，如果 &lt;code>left - 1 == -1&lt;/code> 代表沒有最後一個小於等於6的元素，直接回傳-1。&lt;/li>
+&lt;li>如果有找到最後一個小於等於6的元素(位置 &lt;code>left - 1&lt;/code> ，第一個大於6的左邊)，檢查是否是6， &lt;code>arr[left - 1] == 6&lt;/code> ，不是就回傳-1，如果真的是6才回傳位置 &lt;code>left - 1&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="尋找陣列中任一個6">尋找陣列中任一個6&lt;/h3>
+&lt;blockquote>
+&lt;p>&lt;strong>目標:&lt;/strong> 給定一個升序排列的陣列&lt;strong>arr&lt;/strong>，找出並回傳&lt;strong>任一個6所在的位置&lt;/strong>，&lt;strong>找不到則回傳-1&lt;/strong>&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>
+&lt;p>設計condition函數使得右半邊為&lt;strong>true&lt;/strong>，左半邊為&lt;strong>false&lt;/strong>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>但是這次要找得是任一個6，原本condition函數定義為&lt;strong>大於等於6&lt;/strong>，現在如果發現&lt;strong>等於6&lt;/strong>就可以直接回傳位置了&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="kt">int&lt;/span> &lt;span class="nf">binarySearch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vector&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">arr&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;span class="k">while&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">left&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">right&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">left&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">right&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">left&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">mid&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">mid&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">else&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">mid&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">6&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">right&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">else&lt;/span>
+&lt;span class="n">left&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mid&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="leetcode-相關題目">Leetcode 相關題目&lt;/h2>
+&lt;h3 id="依照索引搜尋-search-by-index">依照索引搜尋 (Search by Index)&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>&lt;a class="link" href="https://leetcode.com/problems/search-insert-position/" target="_blank" rel="noopener"
+>Leetcode 35. Search Insert Position&lt;/a>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;a class="link" href="https://leetcode.com/problems/snapshot-array/" target="_blank" rel="noopener"
+>Leetcode 1146. Snapshot Array&lt;/a>&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;h3 id="依照範圍可能搜尋-search-by-space">依照範圍可能搜尋 (Search by space)&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>&lt;a class="link" href="https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/" target="_blank" rel="noopener"
+>Leetcode 378. Kth Smallest Element in a Sorted Matrix&lt;/a>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;a class="link" href="https://leetcode.com/problems/split-array-largest-sum/" target="_blank" rel="noopener"
+>Leetcode 410. Split Array Largest Sum&lt;/a>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;a class="link" href="https://leetcode.com/problems/nth-magical-number/" target="_blank" rel="noopener"
+>Leetcode 878. Nth Magical Number&lt;/a>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>&lt;a class="link" href="https://leetcode.com/problems/divide-chocolate/" target="_blank" rel="noopener"
+>Leetcode 1231. Divide Chocolate&lt;/a>&lt;/strong>&lt;/li>
+&lt;/ul></description></item><item><title>STL</title><link>https://leovincentseles.github.io/posts/stl/</link><pubDate>Sun, 30 Jan 2022 10:17:40 +0800</pubDate><guid>https://leovincentseles.github.io/posts/stl/</guid><description>&lt;h1 id="c-stl">C++ STL&lt;/h1>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>queue&lt;/th>
+&lt;th>priority_queue&lt;/th>
+&lt;th>stack&lt;/th>
+&lt;th>vector&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>insert back&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>push_back O(1) amortized&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Insertion&lt;/td>
+&lt;td>push O(1)&lt;/td>
+&lt;td>push O(logN)&lt;/td>
+&lt;td>push O(1)&lt;/td>
+&lt;td>insert O(#inserted + #after)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Emplace&lt;/td>
+&lt;td>emplace O(1)&lt;/td>
+&lt;td>emplace O(logN)&lt;/td>
+&lt;td>emplace O(1)&lt;/td>
+&lt;td>emplace O(#after)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Deletion&lt;/td>
+&lt;td>pop O(1)&lt;/td>
+&lt;td>pop O(logN)&lt;/td>
+&lt;td>pop O(1)&lt;/td>
+&lt;td>erase O(#erased + #after)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Get Frist&lt;/td>
+&lt;td>front O(1)&lt;/td>
+&lt;td>top O(1)&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>front O(1)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Get Last&lt;/td>
+&lt;td>back O(1)&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>top O(1)&lt;/td>
+&lt;td>back O(1)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Is Empty&lt;/td>
+&lt;td>empty O(1)&lt;/td>
+&lt;td>empty O(1)&lt;/td>
+&lt;td>empty O(1)&lt;/td>
+&lt;td>empty O(1)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Size&lt;/td>
+&lt;td>size O(1)&lt;/td>
+&lt;td>size O(1)&lt;/td>
+&lt;td>size O(1)&lt;/td>
+&lt;td>size O(1)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Clear&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;td>clear O(N)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>set&lt;/th>
+&lt;th>unordered_set&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Count&lt;/td>
+&lt;td>count O(logN)&lt;/td>
+&lt;td>count O(1) avg&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>O(N) worst&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Insert&lt;/td>
+&lt;td>insert O(logN)&lt;/td>
+&lt;td>insert O(1) avg&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>O(N) worst&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>May rehash&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Emplace&lt;/td>
+&lt;td>emplace O(logN)&lt;/td>
+&lt;td>emplace O(1) avg&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>O(N) worst&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>May rehash&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Deletion (val)&lt;/td>
+&lt;td>erase O(logN)&lt;/td>
+&lt;td>erase O(1) avg&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>O(N) worst&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Deletion (iterator)&lt;/td>
+&lt;td>erase O(1) amortized&lt;/td>
+&lt;td>erase O(1)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Deletion (range)&lt;/td>
+&lt;td>erase O(#erased)&lt;/td>
+&lt;td>erase O(#erased)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Find&lt;/td>
+&lt;td>find O(logN)&lt;/td>
+&lt;td>find O(1) avg&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>O(N) worst&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Lower_bound&lt;/td>
+&lt;td>lower_bound O(logN)&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Upper_bound&lt;/td>
+&lt;td>upper_bound O(logN)&lt;/td>
+&lt;td>N/A&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Clear&lt;/td>
+&lt;td>clear O(N)&lt;/td>
+&lt;td>clear O(N)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="deque">deque&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>Implementation&lt;/strong>: matains a double-ended queue of &lt;strong>chunks&lt;/strong> of fixed size.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>provide a functionality similar to &lt;code>vector&lt;/code>, but with efficient insertion and deletion of elements &lt;strong>also at the beginning&lt;/strong> of the sequence.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="queue">queue&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>Default underlying container: &lt;code>deque&lt;/code>, queue is not container, it just a &lt;code>container adapter&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>push&lt;/code>: Insert a new element at the end of the queue. (&lt;strong>push_back&lt;/strong> of deque)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>emplace&lt;/code>: It can call the constructor by itself (more efficient). (&lt;strong>emplace_back&lt;/strong> of deque)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>pop&lt;/code>: Removes the next element in the queue. (&lt;strong>pop_front&lt;/strong> of deque)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>front&lt;/code>: Returns a &lt;strong>reference&lt;/strong> to the next element in the queue. (&lt;strong>front&lt;/strong> of deque)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>back&lt;/code>: Returns a &lt;strong>reference&lt;/strong> to the last element in the queue. (&lt;strong>back&lt;/strong> of deque)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>empty&lt;/code>: Returns whether the queue is empty. (&lt;strong>empty&lt;/strong> of deque)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>size&lt;/code>: Returns the number of elements in the queue. (&lt;strong>size&lt;/strong> of deque)&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="k">class&lt;/span> &lt;span class="nc">data&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kt">int&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">b&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="k">public&lt;/span>&lt;span class="o">:&lt;/span>
+&lt;span class="n">data&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="n">a&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">b&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">y&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="p">};&lt;/span>
+&lt;span class="n">queue&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">q&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="n">q&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">push&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">));&lt;/span>
+&lt;span class="n">q&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">emplace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">);&lt;/span> &lt;span class="c1">// call constructor in place.
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="priority_queue">priority_queue&lt;/h2>
+&lt;ul>
+&lt;li>Default underlying container: &lt;code>vector&lt;/code>
+&lt;ul>
+&lt;li>Requires indexing heavily. So choose the vector rather than the deque.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>push&lt;/code>: Insert a new element in the priority_queue. (&lt;strong>push_back&lt;/strong> of vector, &lt;strong>push_heap&lt;/strong>)
+&lt;ul>
+&lt;li>&lt;code>vector&amp;lt;int&amp;gt; arr&lt;/code>, &lt;code>arr.push_back(3)&lt;/code>, &lt;code>push_heap(arr.begin(), arr.end())&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>emplace&lt;/code>: &lt;strong>emplace_back&lt;/strong> of vector, &lt;strong>push_heap&lt;/strong>&lt;/li>
+&lt;li>&lt;code>pop&lt;/code>: Remove element on top of the priority queue. (&lt;strong>pop_heap&lt;/strong>, &lt;strong>pop_back&lt;/strong> of vector)
+&lt;ul>
+&lt;li>&lt;code>pop_heap(arr.begin(), arr.end())&lt;/code>, &lt;code>arr.pop_back()&lt;/code>&lt;/li>
+&lt;li>&lt;strong>pop_heap&lt;/strong>: swap the begin and end value, and makes the subrange [first, end-1) into a heap.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>top&lt;/code>: Return a &lt;strong>constant reference&lt;/strong> to the top element. (&lt;strong>front&lt;/strong> of vector)&lt;/li>
+&lt;li>&lt;code>empty&lt;/code>: Returns whether the priority_queue is empty.&lt;/li>
+&lt;li>&lt;code>size&lt;/code>: Returns the number of elements in the priority_queue.&lt;/li>
+&lt;/ul>
+&lt;h2 id="stack">stack&lt;/h2>
+&lt;ul>
+&lt;li>Default underlying container: &lt;code>deque&lt;/code>, stack is not container, just a &lt;code>container adapter&lt;/code>.
+&lt;ul>
+&lt;li>deque can grow faster than a vector (which requires reallocation and copying).&lt;/li>
+&lt;li>stack will call push pop frequently, so choose the deque&lt;/li>
+&lt;li>Reference: &lt;strong>&lt;a class="link" href="https://stackoverflow.com/questions/102459/why-does-stdstack-use-stddeque-by-default" target="_blank" rel="noopener"
+>Why does stack use deque by default?&lt;/a>&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>push&lt;/code>: Insert a new element at the top of the stack. (&lt;strong>push_back&lt;/strong> of deque)&lt;/li>
+&lt;li>&lt;code>emplace&lt;/code>: It can call the constructor by itself (more efficient). (&lt;strong>emplace_back&lt;/strong> of deque)&lt;/li>
+&lt;li>&lt;code>pop&lt;/code>: Removes the element on top of the stack. (&lt;strong>pop_back&lt;/strong> of deque)&lt;/li>
+&lt;li>&lt;code>top&lt;/code>: Returns a reference to the top element in the stack. (&lt;strong>back&lt;/strong> of deque)&lt;/li>
+&lt;li>&lt;code>empty&lt;/code>: Returns whether the stack is empty.&lt;/li>
+&lt;li>&lt;code>size&lt;/code>: Returns the number of elements in the stack.&lt;/li>
+&lt;/ul>
+&lt;h2 id="vector">vector&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>back&lt;/code>: Returns a reference to the last element in the vector.&lt;/li>
+&lt;li>&lt;code>capacity&lt;/code>: Return size of allocated storage capacity.&lt;/li>
+&lt;li>&lt;code>emplace(iterator pos, element)&lt;/code>: Insert a new element at position.&lt;/li>
+&lt;li>&lt;code>emplace_back(element)&lt;/code>: Construct and insert element at the end.&lt;/li>
+&lt;li>&lt;code>push_back&lt;/code>: Insert element at the end.&lt;/li>
+&lt;li>&lt;code>insert&lt;/code>: Insert an element at position.
+&lt;ul>
+&lt;li>&lt;code>insert(iterator pos, element)&lt;/code>:&lt;/li>
+&lt;li>&lt;code>insert(iterator pos, iterator first, iterator last)&lt;/code>:
+&lt;ul>
+&lt;li>insert a range of element at the position.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>erase&lt;/code>: remove from the vector either a single element or a range.
+&lt;ul>
+&lt;li>&lt;code>erase(iterator pos)&lt;/code>: erase a single element from the position&lt;/li>
+&lt;li>&lt;code>erase(iterator first, iterator last)&lt;/code>: erase a range of element [first, last)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>pop_back&lt;/code>: Removes the last element in the vector&lt;/li>
+&lt;li>&lt;code>front&lt;/code>: Returns a reference to the first element in the vector&lt;/li>
+&lt;li>&lt;code>operator[]&lt;/code>: Returns a reference to the element at position n in the vector container.&lt;/li>
+&lt;li>&lt;code>begin&lt;/code>, &lt;code>end&lt;/code>: iterator point to before the first and after the last.&lt;/li>
+&lt;li>&lt;code>rbegin&lt;/code>, &lt;code>rend&lt;/code>: reverse iterator point to before the last and one element before the first.
+&lt;ul>
+&lt;li>&lt;code>for (auto it=vector.rbegin(); it!=vector.rend(); ++it)&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>reserve&lt;/code>: Request the vector capacity be at least enough to contain n elements
+&lt;ul>
+&lt;li>To prevent the frequent reallocation.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>resize&lt;/code>: Resizes the container so that it contains n elements.
+&lt;ul>
+&lt;li>&lt;code>resize(int n)&lt;/code>: If n is greater than current, call the default constructor.&lt;/li>
+&lt;li>&lt;code>resize(int n, int val)&lt;/code>: If n is greater than current, the extended element is initialized with the provided value.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="set">set&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>Sets are typically implemented as binary search tree to allow the &lt;em>&lt;strong>direct iteration on subsets&lt;/strong>&lt;/em> based on their &lt;em>&lt;strong>order&lt;/strong>&lt;/em>.&lt;/p>
+&lt;ul>
+&lt;li>Typically use the &lt;code>red-black tree&lt;/code>.&lt;/li>
+&lt;li>Some folks over at Google actucally builts a B-tree based containers.
+&lt;ul>
+&lt;li>&lt;strong>Reference&lt;/strong>: &lt;strong>&lt;a class="link" href="https://stackoverflow.com/questions/26550276/does-any-stdset-implementation-not-use-a-red-black-tree" target="_blank" rel="noopener"
+>Does any set implementation not use a red-black tree?&lt;/a>&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>value_type&lt;/code> is the first template parameter. (range based for loop)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>count&lt;/code>: 1 if the container contains an element, 0 otherwise&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>erase&lt;/code>: Removes from the set container&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>erase(iterator position)&lt;/code>: &lt;strong>amortized O(1)&lt;/strong>&lt;/li>
+&lt;li>&lt;code>erase(val)&lt;/code>: &lt;strong>O(logN)&lt;/strong>&lt;/li>
+&lt;li>&lt;code>erase(iterator first, iterator last)&lt;/code>: &lt;strong>O(last-first)&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>insert&lt;/code>: Insert the new elements to the set container&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>insert(val)&lt;/code>: &lt;strong>O(logN)&lt;/strong>&lt;/li>
+&lt;li>&lt;code>insert(iterator first, iterator last)&lt;/code>: &lt;strong>O(#inserted * logN)&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>find(val)&lt;/code>: search the container for an element equivalent to val.&lt;/p>
+&lt;ul>
+&lt;li>if found: Return the iterator to the element&lt;/li>
+&lt;li>else: return the iterator set::end&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>lower_bound(val)&lt;/code>: Returns an iterator point to the first &lt;strong>element ≥ val&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>upper_bound(val)&lt;/code>: Returns an iterator point to the first &lt;strong>element &amp;gt; val&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Traversal example:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="n">set&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="c1">// range based traversal
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="nl">num&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">cout&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">data&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">endl&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="c1">// Iterator traversal
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">end&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="o">++&lt;/span>&lt;span class="n">it&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">cout&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">endl&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="unordered_set">unordered_set&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>Unordered sets are containers that store unique elements in &lt;strong>no particular order&lt;/strong>.&lt;/p>
+&lt;ul>
+&lt;li>Use the hash table with &lt;strong>bucket&lt;/strong> as the implementation.&lt;/li>
+&lt;li>When the container is full may trigger &lt;strong>rehash&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>value_type&lt;/code> is the first template parameter. (range based for loop)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>count(k)&lt;/code>: 1 if an element with a value equivalent to k is found, or zero otherwise.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>erase&lt;/code>: Removes from the unordered_set container.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>erase(iterator position)&lt;/code>: &lt;strong>O(1)&lt;/strong>&lt;/li>
+&lt;li>&lt;code>erase(val)&lt;/code>: &lt;strong>O(1) for avg, O(N) for worst&lt;/strong>&lt;/li>
+&lt;li>&lt;code>erase(iterator first, iterator last)&lt;/code>: &lt;strong>O(#erased)&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>insert&lt;/code>: Inserts new elements in the unordered_set&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>insert(val)&lt;/code>: &lt;strong>O(1)&lt;/strong> for avg, &lt;strong>O(N)&lt;/strong> for worst&lt;/li>
+&lt;li>&lt;code>insert(iterator first, iterator last)&lt;/code>: &lt;strong>O(inserted)&lt;/strong> for avg, &lt;em>&lt;em>O(N&lt;/em>(size+1))&lt;/em>* for worst&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>find(k)&lt;/code>: Searches the container for an element with k as value and returns an iterator.&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>O(1)&lt;/strong> for constant, &lt;strong>O(N)&lt;/strong> for worst&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Traversal example&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="n">unordered_set&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="c1">// range based traversal
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="kt">int&lt;/span> &lt;span class="nl">num&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">cout&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">data&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">endl&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="c1">// Iterator traversal
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">end&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="o">++&lt;/span>&lt;span class="n">it&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">cout&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">it&lt;/span> &lt;span class="o">&amp;lt;&amp;lt;&lt;/span> &lt;span class="n">endl&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="map">map&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>Maps are associative containers that store elements formed by a combination of a &lt;strong>key value&lt;/strong> and a &lt;strong>mapped value&lt;/strong>, following a &lt;strong>specific order&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>value_type&lt;/code> is pair&amp;lt;const key_type, mapped_type&amp;gt; (range-based for loop)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>operator[k]&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>If k matches the key of an element in the container, the function &lt;strong>returns a reference to its mapped value&lt;/strong>.&lt;/li>
+&lt;li>If k does not match the key of any element in the container, the function inserts a new element with that key (the &lt;strong>element is constructed using its default constructor&lt;/strong>). and returns a reference to its mapped value.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Traversal example&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="n">map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="c1">// range based traversal, (copy by value)
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="nl">mapPair&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">// for (pair&amp;lt;const string, int&amp;gt; mapPair: data)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s, %d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">first&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">second&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="c1">// range based traversal (Use refernce directly)
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nl">mapPair&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">// for (pair&amp;lt;const string, int&amp;gt; &amp;amp;mapPair: data)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s, %d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">first&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">second&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="c1">// Iterator traversal
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">end&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="o">++&lt;/span>&lt;span class="n">it&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s, %d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">first&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">second&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="unordered_map">unordered_map&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>Unordered maps are associative containers that store elements formed by the combination of a key value and a mapped value, and which allows for &lt;strong>fast retrieval of indiviaudl elements based on their keys&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>value_type&lt;/code> is pair&amp;lt;const key_type, mapped_type&amp;gt; (range-based for loop)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>operator[k]&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>If k matches the key of an element in the container, the function &lt;strong>returns a reference to its mapped value&lt;/strong>.&lt;/li>
+&lt;li>If k does not match the key of any element in the container, the function inserts a new element with that key (the &lt;strong>element is constructed using its default constructor&lt;/strong>). and returns a reference to its mapped value.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Traversal example&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-cpp" data-lang="cpp">&lt;span class="n">unordered_map&lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="n">string&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kt">int&lt;/span>&lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="c1">// range based traversal, (copy by value)
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="nl">mapPair&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">// for (pair&amp;lt;const string, int&amp;gt; mapPair: data)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s, %d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">first&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">second&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="c1">// range based traversal (Use refernce directly)
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="nl">mapPair&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">// for (pair&amp;lt;const string, int&amp;gt; &amp;amp;mapPair: data)
+&lt;/span>&lt;span class="c1">&lt;/span> &lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s, %d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">first&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">mapPair&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">second&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="c1">// Iterator traversal
+&lt;/span>&lt;span class="c1">&lt;/span>&lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">auto&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">begin&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">end&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="o">++&lt;/span>&lt;span class="n">it&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">printf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;%s, %d&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">first&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">it&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">second&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="list">list&lt;/h2>
+&lt;ul>
+&lt;li>&lt;code>Get Reference&lt;/code>:
+&lt;ul>
+&lt;li>&lt;strong>front&lt;/strong>(), &lt;strong>back&lt;/strong>()&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>Get Iterator&lt;/code>:
+&lt;ul>
+&lt;li>&lt;strong>begin&lt;/strong>(), &lt;strong>end&lt;/strong>()&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>Deletion&lt;/code>:
+&lt;ul>
+&lt;li>&lt;strong>erase&lt;/strong>(iterator position)&lt;/li>
+&lt;li>&lt;strong>erase&lt;/strong>(iterator first, iterator last)&lt;/li>
+&lt;li>Iterators, pointers and references referring to elements removed by the function are invalidated.&lt;/li>
+&lt;li>&lt;strong>All other iterators&lt;/strong>, pointers and reference &lt;strong>keep their validity&lt;/strong>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>Insertion&lt;/code>:
+&lt;ul>
+&lt;li>&lt;strong>insert&lt;/strong>(iterator position, value)&lt;/li>
+&lt;li>&lt;strong>insert&lt;/strong>(iterator position, size_type n, val)&lt;/li>
+&lt;li>&lt;strong>insert&lt;/strong>(iterator position, iterator first, iterator last)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>pop_back&lt;/code>(), &lt;code>pop_front&lt;/code>(), &lt;code>push_back&lt;/code>(), &lt;code>push_front&lt;/code>()&lt;/li>
+&lt;li>&lt;code>reverse&lt;/code>&lt;/li>
+&lt;/ul></description></item></channel></rss>

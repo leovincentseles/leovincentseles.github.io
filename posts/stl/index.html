@@ -1,0 +1,718 @@
+<!doctype html><html lang=en-us>
+<head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="C++ STL     queue priority_queue stack vector     insert back N/A N/A N/A push_back O(1) amortized   Insertion push O(1) push O(logN) push O(1) insert O(#inserted + #after)   Emplace emplace O(1) emplace O(logN) emplace O(1) emplace O(#after)   Deletion pop O(1) pop O(logN) pop O(1) erase O(#erased + #after)   Get Frist front O(1) top O(1) N/A front O(1)   Get Last back O(1) N/A top O(1) back O(1)   Is Empty empty O(1) empty O(1) empty O(1) empty O(1)   Size size O(1) size O(1) size O(1) size O(1)   Clear N/A N/A N/A clear O(N)        set unordered_set     Count count O(logN) count O(1) avg   O(N) worst     Insert insert O(logN) insert O(1) avg   O(N) worst     May rehash     Emplace emplace O(logN) emplace O(1) avg   O(N) worst     May rehash     Deletion (val) erase O(logN) erase O(1) avg   O(N) worst     Deletion (iterator) erase O(1) amortized erase O(1)   Deletion (range) erase O(#erased) erase O(#erased)   Find find O(logN) find O(1) avg   O(N) worst     Lower_bound lower_bound O(logN) N/A   Upper_bound upper_bound O(logN) N/A   Clear clear O(N) clear O(N)    deque   Implementation: matains a double-ended queue of chunks of fixed size."><title>STL</title>
+<link rel=canonical href=https://leovincentseles.github.io/posts/stl/>
+<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="STL">
+<meta property="og:description" content="C++ STL     queue priority_queue stack vector     insert back N/A N/A N/A push_back O(1) amortized   Insertion push O(1) push O(logN) push O(1) insert O(#inserted + #after)   Emplace emplace O(1) emplace O(logN) emplace O(1) emplace O(#after)   Deletion pop O(1) pop O(logN) pop O(1) erase O(#erased + #after)   Get Frist front O(1) top O(1) N/A front O(1)   Get Last back O(1) N/A top O(1) back O(1)   Is Empty empty O(1) empty O(1) empty O(1) empty O(1)   Size size O(1) size O(1) size O(1) size O(1)   Clear N/A N/A N/A clear O(N)        set unordered_set     Count count O(logN) count O(1) avg   O(N) worst     Insert insert O(logN) insert O(1) avg   O(N) worst     May rehash     Emplace emplace O(logN) emplace O(1) avg   O(N) worst     May rehash     Deletion (val) erase O(logN) erase O(1) avg   O(N) worst     Deletion (iterator) erase O(1) amortized erase O(1)   Deletion (range) erase O(#erased) erase O(#erased)   Find find O(logN) find O(1) avg   O(N) worst     Lower_bound lower_bound O(logN) N/A   Upper_bound upper_bound O(logN) N/A   Clear clear O(N) clear O(N)    deque   Implementation: matains a double-ended queue of chunks of fixed size.">
+<meta property="og:url" content="https://leovincentseles.github.io/posts/stl/">
+<meta property="og:site_name" content="Yin-Chiuan Chen">
+<meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:published_time" content="2022-01-30T10:17:40+08:00"><meta property="article:modified_time" content="2022-01-30T10:23:18+08:00">
+<meta name=twitter:title content="STL">
+<meta name=twitter:description content="C++ STL     queue priority_queue stack vector     insert back N/A N/A N/A push_back O(1) amortized   Insertion push O(1) push O(logN) push O(1) insert O(#inserted + #after)   Emplace emplace O(1) emplace O(logN) emplace O(1) emplace O(#after)   Deletion pop O(1) pop O(logN) pop O(1) erase O(#erased + #after)   Get Frist front O(1) top O(1) N/A front O(1)   Get Last back O(1) N/A top O(1) back O(1)   Is Empty empty O(1) empty O(1) empty O(1) empty O(1)   Size size O(1) size O(1) size O(1) size O(1)   Clear N/A N/A N/A clear O(N)        set unordered_set     Count count O(logN) count O(1) avg   O(N) worst     Insert insert O(logN) insert O(1) avg   O(N) worst     May rehash     Emplace emplace O(logN) emplace O(1) avg   O(N) worst     May rehash     Deletion (val) erase O(logN) erase O(1) avg   O(N) worst     Deletion (iterator) erase O(1) amortized erase O(1)   Deletion (range) erase O(#erased) erase O(#erased)   Find find O(logN) find O(1) avg   O(N) worst     Lower_bound lower_bound O(logN) N/A   Upper_bound upper_bound O(logN) N/A   Clear clear O(N) clear O(N)    deque   Implementation: matains a double-ended queue of chunks of fixed size.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CJBNEEQCJ1"></script>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-CJBNEEQCJ1',{anonymize_ip:!1})}</script>
+</head>
+<body class="article-page has-toc">
+<script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
+<div class="container main-container flex
+extended">
+<div id=article-toolbar>
+<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
+<span>Back</span>
+</a>
+</div>
+<main class="main full-width">
+<article class=main-article>
+<header class=article-header>
+<div class=article-details>
+<h2 class=article-title>
+<a href=/posts/stl/>STL</a>
+</h2>
+<footer class=article-time>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2022-01-30</time>
+</div>
+</footer>
+</div>
+</header>
+<section class=article-content>
+<h1 id=c-stl>C++ STL</h1>
+<div class=table-wrapper><table>
+<thead>
+<tr>
+<th></th>
+<th>queue</th>
+<th>priority_queue</th>
+<th>stack</th>
+<th>vector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>insert back</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>push_back O(1) amortized</td>
+</tr>
+<tr>
+<td>Insertion</td>
+<td>push O(1)</td>
+<td>push O(logN)</td>
+<td>push O(1)</td>
+<td>insert O(#inserted + #after)</td>
+</tr>
+<tr>
+<td>Emplace</td>
+<td>emplace O(1)</td>
+<td>emplace O(logN)</td>
+<td>emplace O(1)</td>
+<td>emplace O(#after)</td>
+</tr>
+<tr>
+<td>Deletion</td>
+<td>pop O(1)</td>
+<td>pop O(logN)</td>
+<td>pop O(1)</td>
+<td>erase O(#erased + #after)</td>
+</tr>
+<tr>
+<td>Get Frist</td>
+<td>front O(1)</td>
+<td>top O(1)</td>
+<td>N/A</td>
+<td>front O(1)</td>
+</tr>
+<tr>
+<td>Get Last</td>
+<td>back O(1)</td>
+<td>N/A</td>
+<td>top O(1)</td>
+<td>back O(1)</td>
+</tr>
+<tr>
+<td>Is Empty</td>
+<td>empty O(1)</td>
+<td>empty O(1)</td>
+<td>empty O(1)</td>
+<td>empty O(1)</td>
+</tr>
+<tr>
+<td>Size</td>
+<td>size O(1)</td>
+<td>size O(1)</td>
+<td>size O(1)</td>
+<td>size O(1)</td>
+</tr>
+<tr>
+<td>Clear</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>clear O(N)</td>
+</tr>
+</tbody>
+</table></div>
+<div class=table-wrapper><table>
+<thead>
+<tr>
+<th></th>
+<th>set</th>
+<th>unordered_set</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Count</td>
+<td>count O(logN)</td>
+<td>count O(1) avg</td>
+</tr>
+<tr>
+<td>O(N) worst</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Insert</td>
+<td>insert O(logN)</td>
+<td>insert O(1) avg</td>
+</tr>
+<tr>
+<td>O(N) worst</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>May rehash</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Emplace</td>
+<td>emplace O(logN)</td>
+<td>emplace O(1) avg</td>
+</tr>
+<tr>
+<td>O(N) worst</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>May rehash</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Deletion (val)</td>
+<td>erase O(logN)</td>
+<td>erase O(1) avg</td>
+</tr>
+<tr>
+<td>O(N) worst</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Deletion (iterator)</td>
+<td>erase O(1) amortized</td>
+<td>erase O(1)</td>
+</tr>
+<tr>
+<td>Deletion (range)</td>
+<td>erase O(#erased)</td>
+<td>erase O(#erased)</td>
+</tr>
+<tr>
+<td>Find</td>
+<td>find O(logN)</td>
+<td>find O(1) avg</td>
+</tr>
+<tr>
+<td>O(N) worst</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Lower_bound</td>
+<td>lower_bound O(logN)</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Upper_bound</td>
+<td>upper_bound O(logN)</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Clear</td>
+<td>clear O(N)</td>
+<td>clear O(N)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id=deque>deque</h2>
+<ul>
+<li>
+<p><strong>Implementation</strong>: matains a double-ended queue of <strong>chunks</strong> of fixed size.</p>
+</li>
+<li>
+<p>provide a functionality similar to <code>vector</code>, but with efficient insertion and deletion of elements <strong>also at the beginning</strong> of the sequence.</p>
+</li>
+</ul>
+<h2 id=queue>queue</h2>
+<ul>
+<li>
+<p>Default underlying container: <code>deque</code>, queue is not container, it just a <code>container adapter</code>.</p>
+</li>
+<li>
+<p><code>push</code>: Insert a new element at the end of the queue. (<strong>push_back</strong> of deque)</p>
+</li>
+<li>
+<p><code>emplace</code>: It can call the constructor by itself (more efficient). (<strong>emplace_back</strong> of deque)</p>
+</li>
+<li>
+<p><code>pop</code>: Removes the next element in the queue. (<strong>pop_front</strong> of deque)</p>
+</li>
+<li>
+<p><code>front</code>: Returns a <strong>reference</strong> to the next element in the queue. (<strong>front</strong> of deque)</p>
+</li>
+<li>
+<p><code>back</code>: Returns a <strong>reference</strong> to the last element in the queue. (<strong>back</strong> of deque)</p>
+</li>
+<li>
+<p><code>empty</code>: Returns whether the queue is empty. (<strong>empty</strong> of deque)</p>
+</li>
+<li>
+<p><code>size</code>: Returns the number of elements in the queue. (<strong>size</strong> of deque)</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=k>class</span> <span class=nc>data</span> <span class=p>{</span>
+		<span class=kt>int</span> <span class=n>a</span><span class=p>,</span> <span class=n>b</span><span class=p>;</span>
+<span class=k>public</span><span class=o>:</span>
+		<span class=n>data</span><span class=p>(</span><span class=kt>int</span> <span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=n>y</span><span class=p>)</span><span class=o>:</span> <span class=n>a</span><span class=p>(</span><span class=n>x</span><span class=p>),</span> <span class=n>b</span><span class=p>(</span><span class=n>y</span><span class=p>)</span> <span class=p>{}</span>
+<span class=p>};</span>
+
+<span class=n>queue</span><span class=o>&lt;</span><span class=n>data</span><span class=o>&gt;</span> <span class=n>q</span><span class=p>;</span>
+<span class=n>q</span><span class=p>.</span><span class=n>push</span><span class=p>(</span><span class=n>data</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>));</span>
+<span class=n>q</span><span class=p>.</span><span class=n>emplace</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>);</span> <span class=c1>// call constructor in place.
+</span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id=priority_queue>priority_queue</h2>
+<ul>
+<li>Default underlying container: <code>vector</code>
+<ul>
+<li>Requires indexing heavily. So choose the vector rather than the deque.</li>
+</ul>
+</li>
+<li><code>push</code>: Insert a new element in the priority_queue. (<strong>push_back</strong> of vector, <strong>push_heap</strong>)
+<ul>
+<li><code>vector&lt;int> arr</code>, <code>arr.push_back(3)</code>, <code>push_heap(arr.begin(), arr.end())</code></li>
+</ul>
+</li>
+<li><code>emplace</code>: <strong>emplace_back</strong> of vector, <strong>push_heap</strong></li>
+<li><code>pop</code>: Remove element on top of the priority queue. (<strong>pop_heap</strong>, <strong>pop_back</strong> of vector)
+<ul>
+<li><code>pop_heap(arr.begin(), arr.end())</code>, <code>arr.pop_back()</code></li>
+<li><strong>pop_heap</strong>: swap the begin and end value, and makes the subrange [first, end-1) into a heap.</li>
+</ul>
+</li>
+<li><code>top</code>: Return a <strong>constant reference</strong> to the top element. (<strong>front</strong> of vector)</li>
+<li><code>empty</code>: Returns whether the priority_queue is empty.</li>
+<li><code>size</code>: Returns the number of elements in the priority_queue.</li>
+</ul>
+<h2 id=stack>stack</h2>
+<ul>
+<li>Default underlying container: <code>deque</code>, stack is not container, just a <code>container adapter</code>.
+<ul>
+<li>deque can grow faster than a vector (which requires reallocation and copying).</li>
+<li>stack will call push pop frequently, so choose the deque</li>
+<li>Reference: <strong><a class=link href=https://stackoverflow.com/questions/102459/why-does-stdstack-use-stddeque-by-default target=_blank rel=noopener>Why does stack use deque by default?</a></strong></li>
+</ul>
+</li>
+<li><code>push</code>: Insert a new element at the top of the stack. (<strong>push_back</strong> of deque)</li>
+<li><code>emplace</code>: It can call the constructor by itself (more efficient). (<strong>emplace_back</strong> of deque)</li>
+<li><code>pop</code>: Removes the element on top of the stack. (<strong>pop_back</strong> of deque)</li>
+<li><code>top</code>: Returns a reference to the top element in the stack. (<strong>back</strong> of deque)</li>
+<li><code>empty</code>: Returns whether the stack is empty.</li>
+<li><code>size</code>: Returns the number of elements in the stack.</li>
+</ul>
+<h2 id=vector>vector</h2>
+<ul>
+<li><code>back</code>: Returns a reference to the last element in the vector.</li>
+<li><code>capacity</code>: Return size of allocated storage capacity.</li>
+<li><code>emplace(iterator pos, element)</code>: Insert a new element at position.</li>
+<li><code>emplace_back(element)</code>: Construct and insert element at the end.</li>
+<li><code>push_back</code>: Insert element at the end.</li>
+<li><code>insert</code>: Insert an element at position.
+<ul>
+<li><code>insert(iterator pos, element)</code>:</li>
+<li><code>insert(iterator pos, iterator first, iterator last)</code>:
+<ul>
+<li>insert a range of element at the position.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>erase</code>: remove from the vector either a single element or a range.
+<ul>
+<li><code>erase(iterator pos)</code>: erase a single element from the position</li>
+<li><code>erase(iterator first, iterator last)</code>: erase a range of element [first, last)</li>
+</ul>
+</li>
+<li><code>pop_back</code>: Removes the last element in the vector</li>
+<li><code>front</code>: Returns a reference to the first element in the vector</li>
+<li><code>operator[]</code>: Returns a reference to the element at position n in the vector container.</li>
+<li><code>begin</code>, <code>end</code>: iterator point to before the first and after the last.</li>
+<li><code>rbegin</code>, <code>rend</code>: reverse iterator point to before the last and one element before the first.
+<ul>
+<li><code>for (auto it=vector.rbegin(); it!=vector.rend(); ++it)</code></li>
+</ul>
+</li>
+<li><code>reserve</code>: Request the vector capacity be at least enough to contain n elements
+<ul>
+<li>To prevent the frequent reallocation.</li>
+</ul>
+</li>
+<li><code>resize</code>: Resizes the container so that it contains n elements.
+<ul>
+<li><code>resize(int n)</code>: If n is greater than current, call the default constructor.</li>
+<li><code>resize(int n, int val)</code>: If n is greater than current, the extended element is initialized with the provided value.</li>
+</ul>
+</li>
+</ul>
+<h2 id=set>set</h2>
+<ul>
+<li>
+<p>Sets are typically implemented as binary search tree to allow the <em><strong>direct iteration on subsets</strong></em> based on their <em><strong>order</strong></em>.</p>
+<ul>
+<li>Typically use the <code>red-black tree</code>.</li>
+<li>Some folks over at Google actucally builts a B-tree based containers.
+<ul>
+<li><strong>Reference</strong>: <strong><a class=link href=https://stackoverflow.com/questions/26550276/does-any-stdset-implementation-not-use-a-red-black-tree target=_blank rel=noopener>Does any set implementation not use a red-black tree?</a></strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>value_type</code> is the first template parameter. (range based for loop)</p>
+</li>
+<li>
+<p><code>count</code>: 1 if the container contains an element, 0 otherwise</p>
+</li>
+<li>
+<p><code>erase</code>: Removes from the set container</p>
+<ul>
+<li><code>erase(iterator position)</code>: <strong>amortized O(1)</strong></li>
+<li><code>erase(val)</code>: <strong>O(logN)</strong></li>
+<li><code>erase(iterator first, iterator last)</code>: <strong>O(last-first)</strong></li>
+</ul>
+</li>
+<li>
+<p><code>insert</code>: Insert the new elements to the set container</p>
+<ul>
+<li><code>insert(val)</code>: <strong>O(logN)</strong></li>
+<li><code>insert(iterator first, iterator last)</code>: <strong>O(#inserted * logN)</strong></li>
+</ul>
+</li>
+<li>
+<p><code>find(val)</code>: search the container for an element equivalent to val.</p>
+<ul>
+<li>if found: Return the iterator to the element</li>
+<li>else: return the iterator set::end</li>
+</ul>
+</li>
+<li>
+<p><code>lower_bound(val)</code>: Returns an iterator point to the first <strong>element ≥ val</strong>.</p>
+</li>
+<li>
+<p><code>upper_bound(val)</code>: Returns an iterator point to the first <strong>element > val</strong>.</p>
+</li>
+<li>
+<p>Traversal example:</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=n>set</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>data</span><span class=p>;</span>
+
+<span class=c1>// range based traversal
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=nl>num</span><span class=p>:</span> <span class=n>data</span><span class=p>)</span>
+		<span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>data</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+
+<span class=c1>// Iterator traversal
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=n>it</span><span class=o>=</span><span class=n>data</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span> <span class=n>it</span><span class=o>!=</span><span class=n>data</span><span class=p>.</span><span class=n>end</span><span class=p>();</span> <span class=o>++</span><span class=n>it</span><span class=p>)</span>
+		<span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=o>*</span><span class=n>it</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id=unordered_set>unordered_set</h2>
+<ul>
+<li>
+<p>Unordered sets are containers that store unique elements in <strong>no particular order</strong>.</p>
+<ul>
+<li>Use the hash table with <strong>bucket</strong> as the implementation.</li>
+<li>When the container is full may trigger <strong>rehash</strong>.</li>
+</ul>
+</li>
+<li>
+<p><code>value_type</code> is the first template parameter. (range based for loop)</p>
+</li>
+<li>
+<p><code>count(k)</code>: 1 if an element with a value equivalent to k is found, or zero otherwise.</p>
+</li>
+<li>
+<p><code>erase</code>: Removes from the unordered_set container.</p>
+<ul>
+<li><code>erase(iterator position)</code>: <strong>O(1)</strong></li>
+<li><code>erase(val)</code>: <strong>O(1) for avg, O(N) for worst</strong></li>
+<li><code>erase(iterator first, iterator last)</code>: <strong>O(#erased)</strong></li>
+</ul>
+</li>
+<li>
+<p><code>insert</code>: Inserts new elements in the unordered_set</p>
+<ul>
+<li><code>insert(val)</code>: <strong>O(1)</strong> for avg, <strong>O(N)</strong> for worst</li>
+<li><code>insert(iterator first, iterator last)</code>: <strong>O(inserted)</strong> for avg, <em><em>O(N</em>(size+1))</em>* for worst</li>
+</ul>
+</li>
+<li>
+<p><code>find(k)</code>: Searches the container for an element with k as value and returns an iterator.</p>
+<ul>
+<li><strong>O(1)</strong> for constant, <strong>O(N)</strong> for worst</li>
+</ul>
+</li>
+<li>
+<p>Traversal example</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=n>unordered_set</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>data</span><span class=p>;</span>
+
+<span class=c1>// range based traversal
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=nl>num</span><span class=p>:</span> <span class=n>data</span><span class=p>)</span>
+		<span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>data</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+
+<span class=c1>// Iterator traversal
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=n>it</span><span class=o>=</span><span class=n>data</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span> <span class=n>it</span><span class=o>!=</span><span class=n>data</span><span class=p>.</span><span class=n>end</span><span class=p>();</span> <span class=o>++</span><span class=n>it</span><span class=p>)</span>
+		<span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=o>*</span><span class=n>it</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id=map>map</h2>
+<ul>
+<li>
+<p>Maps are associative containers that store elements formed by a combination of a <strong>key value</strong> and a <strong>mapped value</strong>, following a <strong>specific order</strong>.</p>
+</li>
+<li>
+<p><code>value_type</code> is pair&lt;const key_type, mapped_type> (range-based for loop)</p>
+</li>
+<li>
+<p><code>operator[k]</code>:</p>
+<ul>
+<li>If k matches the key of an element in the container, the function <strong>returns a reference to its mapped value</strong>.</li>
+<li>If k does not match the key of any element in the container, the function inserts a new element with that key (the <strong>element is constructed using its default constructor</strong>). and returns a reference to its mapped value.</li>
+</ul>
+</li>
+<li>
+<p>Traversal example</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=n>map</span><span class=o>&lt;</span><span class=n>string</span><span class=p>,</span> <span class=kt>int</span><span class=o>&gt;</span> <span class=n>data</span><span class=p>;</span>
+
+<span class=c1>// range based traversal, (copy by value)
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=nl>mapPair</span><span class=p>:</span> <span class=n>data</span><span class=p>)</span> <span class=c1>// for (pair&lt;const string, int&gt; mapPair: data)
+</span><span class=c1></span>		<span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s, %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+
+<span class=c1>// range based traversal (Use refernce directly)
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=o>&amp;</span><span class=nl>mapPair</span><span class=p>:</span> <span class=n>data</span><span class=p>)</span> <span class=c1>// for (pair&lt;const string, int&gt; &amp;mapPair: data)
+</span><span class=c1></span>		<span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s, %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+
+<span class=c1>// Iterator traversal
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=n>it</span><span class=o>=</span><span class=n>data</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span> <span class=n>it</span><span class=o>!=</span><span class=n>data</span><span class=p>.</span><span class=n>end</span><span class=p>();</span> <span class=o>++</span><span class=n>it</span><span class=p>)</span>
+		<span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s, %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>it</span><span class=o>-&gt;</span><span class=n>first</span><span class=p>,</span> <span class=n>it</span><span class=o>-&gt;</span><span class=n>second</span><span class=p>);</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id=unordered_map>unordered_map</h2>
+<ul>
+<li>
+<p>Unordered maps are associative containers that store elements formed by the combination of a key value and a mapped value, and which allows for <strong>fast retrieval of indiviaudl elements based on their keys</strong>.</p>
+</li>
+<li>
+<p><code>value_type</code> is pair&lt;const key_type, mapped_type> (range-based for loop)</p>
+</li>
+<li>
+<p><code>operator[k]</code>:</p>
+<ul>
+<li>If k matches the key of an element in the container, the function <strong>returns a reference to its mapped value</strong>.</li>
+<li>If k does not match the key of any element in the container, the function inserts a new element with that key (the <strong>element is constructed using its default constructor</strong>). and returns a reference to its mapped value.</li>
+</ul>
+</li>
+<li>
+<p>Traversal example</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=n>unordered_map</span><span class=o>&lt;</span><span class=n>string</span><span class=p>,</span> <span class=kt>int</span><span class=o>&gt;</span> <span class=n>data</span><span class=p>;</span>
+
+<span class=c1>// range based traversal, (copy by value)
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=nl>mapPair</span><span class=p>:</span> <span class=n>data</span><span class=p>)</span> <span class=c1>// for (pair&lt;const string, int&gt; mapPair: data)
+</span><span class=c1></span>		<span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s, %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+
+<span class=c1>// range based traversal (Use refernce directly)
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=o>&amp;</span><span class=nl>mapPair</span><span class=p>:</span> <span class=n>data</span><span class=p>)</span> <span class=c1>// for (pair&lt;const string, int&gt; &amp;mapPair: data)
+</span><span class=c1></span>		<span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s, %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>mapPair</span><span class=p>.</span><span class=n>second</span><span class=p>);</span>
+
+<span class=c1>// Iterator traversal
+</span><span class=c1></span><span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=n>it</span><span class=o>=</span><span class=n>data</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span> <span class=n>it</span><span class=o>!=</span><span class=n>data</span><span class=p>.</span><span class=n>end</span><span class=p>();</span> <span class=o>++</span><span class=n>it</span><span class=p>)</span>
+		<span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s, %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>it</span><span class=o>-&gt;</span><span class=n>first</span><span class=p>,</span> <span class=n>it</span><span class=o>-&gt;</span><span class=n>second</span><span class=p>);</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id=list>list</h2>
+<ul>
+<li><code>Get Reference</code>:
+<ul>
+<li><strong>front</strong>(), <strong>back</strong>()</li>
+</ul>
+</li>
+<li><code>Get Iterator</code>:
+<ul>
+<li><strong>begin</strong>(), <strong>end</strong>()</li>
+</ul>
+</li>
+<li><code>Deletion</code>:
+<ul>
+<li><strong>erase</strong>(iterator position)</li>
+<li><strong>erase</strong>(iterator first, iterator last)</li>
+<li>Iterators, pointers and references referring to elements removed by the function are invalidated.</li>
+<li><strong>All other iterators</strong>, pointers and reference <strong>keep their validity</strong>.</li>
+</ul>
+</li>
+<li><code>Insertion</code>:
+<ul>
+<li><strong>insert</strong>(iterator position, value)</li>
+<li><strong>insert</strong>(iterator position, size_type n, val)</li>
+<li><strong>insert</strong>(iterator position, iterator first, iterator last)</li>
+</ul>
+</li>
+<li><code>pop_back</code>(), <code>pop_front</code>(), <code>push_back</code>(), <code>push_front</code>()</li>
+<li><code>reverse</code></li>
+</ul>
+</section>
+<footer class=article-footer>
+<section class=article-lastmod><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>
+Last updated on 2022-01-30
+</span>
+</section></footer>
+</article>
+<aside class=related-contents--wrapper>
+</aside>
+<script src=https://utteranc.es/client.js repo=leovincentseles/leovincentseles.github.io issue-term=pathname label=Blog-Comment crossorigin=anonymous async></script>
+<style>.utterances{max-width:unset}</style>
+<script>function setUtterancesTheme(b){let a=document.querySelector('.utterances iframe');a&&a.contentWindow.postMessage({type:'set-theme',theme:`github-${b}`},'https://utteranc.es')}addEventListener('message',a=>{if(a.origin!=='https://utteranc.es')return;setUtterancesTheme(document.documentElement.dataset.scheme)}),window.addEventListener('onColorSchemeChange',a=>{setUtterancesTheme(a.detail)})</script>
+<footer class=site-footer>
+<section class=copyright>
+&copy;
+2022 Yin-Chiuan Chen
+</section>
+<section class=powerby>
+Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
+Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.8.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a>
+</section>
+</footer>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
+</main>
+<aside class="sidebar right-sidebar sticky">
+<section class="widget archives">
+<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
+</div>
+<h2 class="widget-title section-title">Table of contents</h2>
+<div class=widget--toc>
+<nav id=TableOfContents>
+<ol>
+<li><a href=#deque>deque</a></li>
+<li><a href=#queue>queue</a></li>
+<li><a href=#priority_queue>priority_queue</a></li>
+<li><a href=#stack>stack</a></li>
+<li><a href=#vector>vector</a></li>
+<li><a href=#set>set</a></li>
+<li><a href=#unordered_set>unordered_set</a></li>
+<li><a href=#map>map</a></li>
+<li><a href=#unordered_map>unordered_map</a></li>
+<li><a href=#list>list</a></li>
+</ol>
+</nav>
+</div>
+</section>
+</aside>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script>
+<link rel=stylesheet href=/styles/mainMenu.css>
+<link rel=stylesheet href=/styles/monokai.css>
+<link rel=stylesheet href=/styles/codeBeautify.css>
+<link rel=stylesheet href=/styles/noSelect.css>
+<link rel=stylesheet href=/styles/codeSection.css>
+</body>
+</html>

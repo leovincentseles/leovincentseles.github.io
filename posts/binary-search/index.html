@@ -1,0 +1,651 @@
+<!doctype html><html lang=en-us>
+<head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Explore the insight of binary search and provide a template code for implementation "><title>Introduction to Binary Search</title>
+<link rel=canonical href=https://leovincentseles.github.io/posts/binary-search/>
+<link rel=stylesheet href=/scss/style.min.bbcfef3c56489f1f37b552146da519e6b6a74a4c92792bcc512c78e2f55f25e1.css><meta property="og:title" content="Introduction to Binary Search">
+<meta property="og:description" content="Explore the insight of binary search and provide a template code for implementation ">
+<meta property="og:url" content="https://leovincentseles.github.io/posts/binary-search/">
+<meta property="og:site_name" content="Yin-Chiuan Chen">
+<meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="Programming"><meta property="article:tag" content="C++"><meta property="article:published_time" content="2022-01-30T18:15:41+08:00"><meta property="article:modified_time" content="2022-02-05T12:14:56+08:00"><meta property="og:image" content="https://leovincentseles.github.io/posts/binary-search/LanYang-Museum.jpg">
+<meta name=twitter:title content="Introduction to Binary Search">
+<meta name=twitter:description content="Explore the insight of binary search and provide a template code for implementation "><meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://leovincentseles.github.io/posts/binary-search/LanYang-Museum.jpg">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CJBNEEQCJ1"></script>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-CJBNEEQCJ1',{anonymize_ip:!1})}</script>
+</head>
+<body class="article-page has-toc">
+<script>(function(){const a='StackColorScheme';localStorage.getItem(a)||localStorage.setItem(a,"auto")})()</script><script>(function(){const b='StackColorScheme',a=localStorage.getItem(b),c=window.matchMedia('(prefers-color-scheme: dark)').matches===!0;a=='dark'||a==='auto'&&c?document.documentElement.dataset.scheme='dark':document.documentElement.dataset.scheme='light'})()</script>
+<div class="container main-container flex
+extended">
+<div id=article-toolbar>
+<a href=/ class=back-home><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="15 6 9 12 15 18"/></svg>
+<span>Back</span>
+</a>
+</div>
+<main class="main full-width">
+<article class="has-image main-article">
+<header class=article-header>
+<div class=article-image>
+<a href=/posts/binary-search/>
+<img src=/posts/binary-search/LanYang-Museum_hud643287408cf45e84197812439608e3c_1378856_800x0_resize_q75_box.jpg srcset="/posts/binary-search/LanYang-Museum_hud643287408cf45e84197812439608e3c_1378856_800x0_resize_q75_box.jpg 800w, /posts/binary-search/LanYang-Museum_hud643287408cf45e84197812439608e3c_1378856_1600x0_resize_q75_box.jpg 1600w" width=800 height=600 loading=lazy alt="Featured image of post Introduction to Binary Search">
+</a>
+</div>
+<div class=article-details>
+<header class=article-category>
+<a href=/categories/leetcode/>
+Leetcode
+</a>
+<a href=/categories/algorithm/>
+Algorithm
+</a>
+</header>
+<h2 class=article-title>
+<a href=/posts/binary-search/>Introduction to Binary Search</a>
+</h2>
+<h3 class=article-subtitle>
+Explore the insight of binary search and provide a template code for implementation
+</h3>
+<footer class=article-time>
+<div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2022-01-30</time>
+</div>
+</footer>
+</div>
+</header>
+<section class=article-content>
+<h2 id=介紹>介紹</h2>
+<ul>
+<li><code>二元搜索法</code> (Binary Search) 是大家剛接觸程式設計就學習到的演算法，但是一點也不簡單，是標準的一看就會一寫就廢類型 (<a class=link href=https://programmercarl.com/0704.%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE.html#_704-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE target=_blank rel=noopener><strong>引自代碼隨想錄</strong></a>)，寫不好的原因有兩個
+<ol>
+<li>區間的定義
+<ul>
+<li><code>[left, right]</code>, <code>[left, right)</code>, <code>(left, right]</code>, <code>(left, right)</code></li>
+</ul>
+</li>
+<li><code>left</code>, <code>right</code> 兩個索引在算法執行前、執行中與執行後後分別會指向哪種元素?</li>
+</ol>
+</li>
+<li>這篇文章將會描述<code>二元搜索法</code>的算法模板，以及介紹三種常見的<code>二元搜索法</code>問題</li>
+</ul>
+<h2 id=基本模板>基本模板</h2>
+<ul>
+<li>模板是讀了<a class=link href=https://leetcode.com/jiah/ target=_blank rel=noopener><strong>jiah</strong></a>在Leetcode討論區下方的<a class=link href=https://leetcode.com/discuss/general-discussion/786126/Python-Powerful-Ultimate-Binary-Search-Template.-Solved-many-problems/656934 target=_blank rel=noopener><strong>留言</strong></a>之後整理出來</li>
+<li>先討論<code>二元搜索法</code>的基本模板，後續才會說明如何利用模板轉換成三種常見的<code>二元搜索法</code>問題</li>
+</ul>
+<h3 id=基本模板說明>基本模板說明</h3>
+<blockquote>
+<p><strong>目標:</strong> 給定一個陣列<code>arr</code>，找出<code>最小的索引k</code>，使得<code>condition(arr[k])</code>結果為<strong>true</strong>。</p>
+</blockquote>
+<ul>
+<li>
+<p>舉個例子: 找出陣列中第一個大於等於6的元素，</p>
+<ul>
+<li>
+<p>用基本模板說明就是找出陣列中最小的索引k，而且arr[k] ≥ 6 (<code>condition函數</code>)</p>
+</li>
+<li>
+<p>在這個例子(下方程式碼)中我們想要的k就是2 (因為arr[2] ≥ 6)</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=c1>// The given array
+</span><span class=c1></span><span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>arr</span><span class=p>{</span><span class=mi>1</span><span class=p>,</span> <span class=mi>5</span><span class=p>,</span> <span class=mi>7</span><span class=p>,</span> <span class=mi>20</span><span class=p>};</span>
+
+<span class=c1>// The condition function
+</span><span class=c1></span><span class=kt>bool</span> <span class=nf>condition</span><span class=p>(</span><span class=kt>int</span> <span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=p>(</span><span class=n>val</span> <span class=o>&gt;=</span> <span class=mi>6</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<p>在更深入討論基本模板之前，我們需要先了解模板的使用前提，並設計適當的condition函數</p>
+<ul>
+<li><strong>前提</strong>: 調用condition函數後<strong>所有true發生的位置必須落在所有false的右邊</strong></li>
+<li>合法的情形
+<ul>
+<li>(前半部為false, 後半部為true)，false, false, false, <strong>true</strong>, <strong>true</strong>, <strong>true</strong></li>
+<li>(全為false)，false, false, false, false, false, false</li>
+<li>(全為true)，<strong>true</strong>, <strong>true</strong>, <strong>true</strong>, <strong>true</strong>, <strong>true</strong>, <strong>true</strong></li>
+</ul>
+</li>
+<li>不合法的情形: 有的<strong>true</strong>出現在false左邊
+<ul>
+<li>false, <strong>true</strong>, false, <strong>true</strong>, <strong>true</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id=循環不變量>循環不變量</h3>
+<ul>
+<li>實作二元搜索法之前，我們先定義一些循環不變量(<strong>Loop Invariants</strong>)，執行前、執行中與執行後我們都需要遵守這些循環不變量的規則</li>
+<li>為了避免複雜的邊界條件，我們將陣列索引範圍從原本的 \([0, arr.size())\)想像往左和右擴展至\((-\infty, +\infty)\)，同時也要符合前提: 調用condition函數後<strong>所有true發生的位置必須落在所有false的右邊</strong>，也就是
+<ul>
+<li>擴展的陣列索引\((-\infty,\ 0)\) 皆無法滿足condition函數(<strong>false</strong>)</li>
+<li>擴展的陣列索引\([arr.size(),\ +\infty)\) 皆滿足condition函數(<strong>true</strong>)</li>
+</ul>
+</li>
+<li>接著定義三個循環不變量(待檢測集合、false集合與true集合)</li>
+<li>index \(\in [left,\ right)\) → <strong>待檢測集合</strong>
+<ul>
+<li>在這段索引範圍的<code>arr[index]</code>為待檢測的元素 \((left \leq\) index \(&lt; right)\)</li>
+</ul>
+</li>
+<li>index \(\in (-\infty,\ left)\) → <strong>false集合</strong>
+<ul>
+<li>在這段索引範圍的<code>arr[index]</code>皆無法滿足condition函數(<strong>false</strong>) \((-\infty &lt;\) index \(&lt; left)\)</li>
+</ul>
+</li>
+<li>index \(\in [right,\ +\infty)\) → <strong>true集合</strong>
+<ul>
+<li>在這段索引範圍的<code>arr[index]</code>皆滿足condition函數(<strong>true</strong>) \((right \leq\) index \(&lt; \infty)\)</li>
+</ul>
+</li>
+<li>定義完相關的循環不變量，接著就是照著規則實作</li>
+</ul>
+<h3 id=實作>實作</h3>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=c1>// The condition function
+</span><span class=c1></span><span class=kt>bool</span> <span class=nf>condition</span><span class=p>(</span><span class=kt>int</span> <span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=p>(</span><span class=n>val</span> <span class=o>&gt;=</span> <span class=mi>6</span><span class=p>);</span>
+<span class=p>}</span>
+
+<span class=kt>int</span> <span class=nf>binarySearch</span><span class=p>(</span><span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>arr</span><span class=p>)</span> <span class=p>{</span>
+    <span class=kt>int</span> <span class=n>left</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>right</span> <span class=o>=</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>();</span>
+
+    <span class=k>while</span> <span class=p>(</span><span class=n>left</span> <span class=o>&lt;</span> <span class=n>right</span><span class=p>)</span> <span class=p>{</span>
+        <span class=kt>int</span> <span class=n>mid</span> <span class=o>=</span> <span class=n>left</span> <span class=o>+</span> <span class=p>(</span><span class=n>right</span> <span class=o>-</span> <span class=n>left</span><span class=p>)</span> <span class=o>/</span> <span class=mi>2</span><span class=p>;</span>
+
+        <span class=k>if</span> <span class=p>(</span><span class=n>condition</span><span class=p>(</span><span class=n>arr</span><span class=p>[</span><span class=n>mid</span><span class=p>])</span> <span class=o>==</span> <span class=nb>true</span><span class=p>)</span>
+            <span class=n>right</span> <span class=o>=</span> <span class=n>mid</span><span class=p>;</span>
+        <span class=k>else</span>
+            <span class=n>left</span> <span class=o>=</span> <span class=n>mid</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=k>if</span> <span class=p>(</span><span class=n>left</span> <span class=o>==</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>())</span>
+        <span class=n>printf</span><span class=p>(</span><span class=s>&#34;Cannot find a valid element</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>                
+
+    <span class=k>return</span> <span class=n>left</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<p>二元搜索執行之前
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>7
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=kt>int</span> <span class=n>left</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>right</span> <span class=o>=</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>();</span></code></pre></td></tr></table>
+</div>
+</div></p>
+<ul>
+<li>待檢測集合為\([0,\ arr.size())\)，因此<code>left</code>設定為0，<code>right</code>設定為arr.size()。</li>
+<li>索引\((-\infty,\ left) \rightarrow (-\infty,\ 0)\) 符合<strong>Loop invariant</strong>，在這個範圍condition(arr[index])皆為<strong>false</strong>。</li>
+<li>索引\([right,\ \infty) \rightarrow [arr.size(),\ \infty)\) 符合<strong>Loop invariant</strong>，在這個範圍condition(arr[index])皆為<strong>true</strong>。</li>
+</ul>
+</li>
+<li>
+<p>二元搜索</p>
+<ul>
+<li>while迴圈的條件
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=k>while</span> <span class=p>(</span><span class=n>left</span> <span class=o>&lt;</span> <span class=n>right</span><span class=p>)</span> <span class=p>{</span></code></pre></td></tr></table>
+</div>
+</div>
+<ul>
+<li>還有尚未檢測的元素就要繼續執行，也就是<strong>待檢測集合</strong>: \([left, right)\) 至少有一個元素 \((left &lt; right)\)</li>
+</ul>
+</li>
+<li>如果arr[mid]符合condition函數
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=k>if</span> <span class=p>(</span><span class=n>condition</span><span class=p>(</span><span class=n>arr</span><span class=p>[</span><span class=n>mid</span><span class=p>])</span> <span class=o>==</span> <span class=nb>true</span><span class=p>)</span>
+    <span class=n>right</span> <span class=o>=</span> <span class=n>mid</span><span class=p>;</span></code></pre></td></tr></table>
+</div>
+</div>
+<ul>
+<li>因為有前提的保證(<strong>所有true發生的位置必須落在所有false的右邊</strong>)，所以對於所有大於等於mid的索引調用condition函數都是true，而<strong>true集合</strong>範圍為\([right,\ \infty)\)，因此我們必須將<code>right</code>更新為<code>mid</code>。</li>
+</ul>
+</li>
+<li>arr[mid]不符合condition函數
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=k>else</span>
+    <span class=n>left</span> <span class=o>=</span> <span class=n>mid</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span></code></pre></td></tr></table>
+</div>
+</div>
+<ul>
+<li>因為有前提的保證(<strong>所有true發生的位置必須落在所有false的右邊</strong>)，所以對於所有小於等於mid的索引調用condition函數都是false，而<strong>false集合</strong>範圍為\((-\infty, left)\)，因此我們必須將<code>left</code>更新為<code>mid+1</code> (更新後我們可以確保left-1是原本的mid，而<strong>condition(arr[mid])為false</strong>)。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id=分析>分析</h3>
+<ul>
+<li>
+<p><strong>收斂性</strong></p>
+<ul>
+<li>二元搜索法最怕的就是無窮迴圈(infinite loop)，而只要算法能夠在每次迴圈將<strong>待搜索範圍至少減一</strong>，就不會發生無窮迴圈。</li>
+<li>在進入迴圈的時候，\(left &lt; right\)，而且 \(mid = \frac{left + right}{2}\) 用的是整數除法，所以這三個索引之間的關係是 \(left \leq mid &lt; right\)。</li>
+<li>在迴圈中只有兩種索引更新，<code>right = mid</code>或是<code>left = mid + 1</code>，因為 <code>right</code> 不等於 <code>mid</code> ，所以<code>right</code>的更新會讓待搜索範圍至少減一，而<code>left</code>的更新也很明顯會讓待搜索範圍至少減一。</li>
+<li>在搜索範圍為空集合時，迴圈的條件 \(left &lt; right\) 不會滿足，因此不可能發生無窮迴圈</li>
+</ul>
+</li>
+<li>
+<p><strong>索引left和right</strong></p>
+<ul>
+<li>在結束了while迴圈，可以確定的是 \(left \geq right \)，而透過以下分析我們可以知道其實 <strong>\(left\) 和 \(right\) 會指向同個地方</strong>
+<ul>
+<li>每次進入迴圈，三個索引之間的關係是 \(left \leq mid &lt; right\)，而且程式碼中只有兩種索引更新方式</li>
+<li><code>right = mid</code>: 執行完後的結果會是 \(left &lt; right\ (left \neq mid)\) 或 \(left = right\ (left = mid)\)</li>
+<li><code>left = mid + 1</code>: 執行完後的結果會是 \(left &lt; right\ (mid &lt; right-1)\) 或 \(left = right\ (mid = right-1)\)</li>
+<li>更新完索引之後如果 \(left = right\)，就會結束迴圈，所以不會有 \(left > right \) 的可能性。</li>
+</ul>
+</li>
+<li><code>left</code> 和 <code>right</code> 指向的地方
+<ul>
+<li>從上面分析可以得出兩個索引最後會共同指向一個地方</li>
+<li>從每次迴圈都維護的循環不變量<strong>false集合</strong>與<strong>true集合</strong>，我們可以分析
+<ul>
+<li>\((-\infty,\ left)\)為<strong>false集合</strong>，left和right共同指向的左側(<strong>不包含</strong>)condition皆為<strong>false</strong>。</li>
+<li>\([right,\ \infty)\)為<strong>true集合</strong>，left和right共同指向的右側(<strong>包含</strong>)condition皆為<strong>true</strong>。</li>
+</ul>
+</li>
+<li><code>left</code> 和 <code>right</code> 會共同指向<strong>滿足condition的最小索引</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>邊界條件分析</strong></p>
+<ol>
+<li>如果是空陣列(<code>arr.size() = 0</code>)， <code>left</code> 和 <code>right</code> 都會被初始化為 <code>0</code>，不會進到 while迴圈</li>
+<li>如果陣列所有元素經過condition函數都是 <code>false</code>, <code>left</code> 和 <code>right</code> 最後會指到 <code>arr.size()</code>，代表找不到</li>
+<li>如果陣列所有元素經過condition函數都是 <code>true</code>, <code>left</code> 和 <code>right</code> 都會指到 <code>0</code></li>
+</ol>
+</li>
+<li>
+<p><strong>邊界條件處理</strong></p>
+<ul>
+<li>針對1. 2.兩種可能可以檢查<code>left == arr.size()</code>，再做對應處理</li>
+</ul>
+</li>
+</ul>
+<h2 id=三種二元搜索法問題>三種二元搜索法問題</h2>
+<ul>
+<li>接著要介紹的是三種常見的<code>二元搜索法</code>問題</li>
+<li>幸運的是三種問題都可以從基本模板做稍微修改就可以解決。</li>
+</ul>
+<h3 id=尋找陣列中第一個6>尋找陣列中第一個6</h3>
+<blockquote>
+<p><strong>目標:</strong> 給定一個升序排列的陣列<strong>arr</strong>，找出並回傳<strong>第一個6所在的位置</strong>，<strong>找不到則回傳-1</strong></p>
+</blockquote>
+<ul>
+<li>
+<p>設計condition函數使得右半邊為<strong>true</strong>，左半邊為<strong>false</strong></p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=kt>bool</span> <span class=nf>condition</span><span class=p>(</span><span class=kt>int</span> <span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=p>(</span><span class=n>val</span> <span class=o>&gt;=</span> <span class=mi>6</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>套用基本模板，找到第一個符合condition函數的位置</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=kt>int</span> <span class=nf>binarySearch</span><span class=p>(</span><span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>arr</span><span class=p>)</span> <span class=p>{</span>
+    <span class=kt>int</span> <span class=n>left</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>right</span> <span class=o>=</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>();</span>
+
+    <span class=k>while</span> <span class=p>(</span><span class=n>left</span> <span class=o>&lt;</span> <span class=n>right</span><span class=p>)</span> <span class=p>{</span>
+        <span class=kt>int</span> <span class=n>mid</span> <span class=o>=</span> <span class=n>left</span> <span class=o>+</span> <span class=p>(</span><span class=n>right</span> <span class=o>-</span> <span class=n>left</span><span class=p>)</span> <span class=o>/</span> <span class=mi>2</span><span class=p>;</span>
+
+        <span class=k>if</span> <span class=p>(</span><span class=n>condition</span><span class=p>(</span><span class=n>arr</span><span class=p>[</span><span class=n>mid</span><span class=p>]))</span>
+            <span class=n>right</span> <span class=o>=</span> <span class=n>mid</span><span class=p>;</span>
+        <span class=k>else</span>
+            <span class=n>left</span> <span class=o>=</span> <span class=n>mid</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=k>if</span> <span class=p>(</span><span class=n>left</span> <span class=o>==</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>()</span> <span class=o>||</span> <span class=n>arr</span><span class=p>[</span><span class=n>left</span><span class=p>]</span> <span class=o>!=</span> <span class=mi>6</span><span class=p>)</span>
+        <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+
+    <span class=k>return</span> <span class=n>left</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>找到第一個大於等於6的位置之後
+<ul>
+<li>首先針對<strong>邊界條件</strong>做處理， <code>left == arr.size()</code> 代表找不到直接回傳-1。</li>
+<li>如果有找到第一個大於等於6的元素，檢查是否是6， <code>arr[left] == 6</code> ，不是就回傳-1，如果真的是6才回傳位置 <code>left</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id=尋找陣列中最後一個6>尋找陣列中最後一個6</h3>
+<blockquote>
+<p><strong>目標:</strong> 給定一個升序排列的陣列<strong>arr</strong>，找出並回傳<strong>最後一個6所在的位置</strong>，<strong>找不到則回傳-1</strong></p>
+</blockquote>
+<ul>
+<li>
+<p>設計condition函數使得右半邊為<strong>true</strong>，左半邊為<strong>false</strong></p>
+</li>
+<li>
+<p>但是這次要找得是最後一個6，所以我們稍微修改了一下condition函數，目標是找到第一個大於6的位置，再做後續處理</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=kt>bool</span> <span class=nf>condition</span><span class=p>(</span><span class=kt>int</span> <span class=n>val</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=p>(</span><span class=n>val</span> <span class=o>&gt;</span> <span class=mi>6</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>套用基本模板，找到第一個大於6(符合condition函數)的位置</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=kt>int</span> <span class=nf>binarySearch</span><span class=p>(</span><span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>arr</span><span class=p>)</span> <span class=p>{</span>
+    <span class=kt>int</span> <span class=n>left</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>right</span> <span class=o>=</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>();</span>
+
+    <span class=k>while</span> <span class=p>(</span><span class=n>left</span> <span class=o>&lt;</span> <span class=n>right</span><span class=p>)</span> <span class=p>{</span>
+        <span class=kt>int</span> <span class=n>mid</span> <span class=o>=</span> <span class=n>left</span> <span class=o>+</span> <span class=p>(</span><span class=n>right</span> <span class=o>-</span> <span class=n>left</span><span class=p>)</span> <span class=o>/</span> <span class=mi>2</span><span class=p>;</span>
+
+        <span class=k>if</span> <span class=p>(</span><span class=n>condition</span><span class=p>(</span><span class=n>arr</span><span class=p>[</span><span class=n>mid</span><span class=p>]))</span>
+            <span class=n>right</span> <span class=o>=</span> <span class=n>mid</span><span class=p>;</span>
+        <span class=k>else</span>
+            <span class=n>left</span> <span class=o>=</span> <span class=n>mid</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=k>if</span> <span class=p>(</span><span class=n>left</span> <span class=o>-</span> <span class=mi>1</span> <span class=o>==</span> <span class=o>-</span><span class=mi>1</span> <span class=o>||</span> <span class=n>arr</span><span class=p>[</span><span class=n>left</span> <span class=o>-</span> <span class=mi>1</span><span class=p>]</span> <span class=o>!=</span> <span class=mi>6</span><span class=p>)</span>
+        <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+
+    <span class=k>return</span> <span class=n>left</span> <span class=o>-</span> <span class=mi>1</span><span class=p>;</span>
+<span class=p>}</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>找到第一個大於等於6的位置之後，我們想找得其實是最後一個6，所以要檢查得元素位置在 <code>left - 1</code>
+<ul>
+<li>首先針對<strong>邊界條件</strong>做處理，如果 <code>left - 1 == -1</code> 代表沒有最後一個小於等於6的元素，直接回傳-1。</li>
+<li>如果有找到最後一個小於等於6的元素(位置 <code>left - 1</code> ，第一個大於6的左邊)，檢查是否是6， <code>arr[left - 1] == 6</code> ，不是就回傳-1，如果真的是6才回傳位置 <code>left - 1</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id=尋找陣列中任一個6>尋找陣列中任一個6</h3>
+<blockquote>
+<p><strong>目標:</strong> 給定一個升序排列的陣列<strong>arr</strong>，找出並回傳<strong>任一個6所在的位置</strong>，<strong>找不到則回傳-1</strong></p>
+</blockquote>
+<ul>
+<li>
+<p>設計condition函數使得右半邊為<strong>true</strong>，左半邊為<strong>false</strong></p>
+</li>
+<li>
+<p>但是這次要找得是任一個6，原本condition函數定義為<strong>大於等於6</strong>，現在如果發現<strong>等於6</strong>就可以直接回傳位置了</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=kt>int</span> <span class=nf>binarySearch</span><span class=p>(</span><span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>arr</span><span class=p>)</span> <span class=p>{</span>
+    <span class=kt>int</span> <span class=n>left</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>right</span> <span class=o>=</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>();</span>
+
+    <span class=k>while</span> <span class=p>(</span><span class=n>left</span> <span class=o>&lt;</span> <span class=n>right</span><span class=p>)</span> <span class=p>{</span>
+        <span class=kt>int</span> <span class=n>mid</span> <span class=o>=</span> <span class=n>left</span> <span class=o>+</span> <span class=p>(</span><span class=n>right</span> <span class=o>-</span> <span class=n>left</span><span class=p>)</span> <span class=o>/</span> <span class=mi>2</span><span class=p>;</span>
+
+        <span class=k>if</span> <span class=p>(</span><span class=n>arr</span><span class=p>[</span><span class=n>mid</span><span class=p>]</span> <span class=o>==</span> <span class=mi>6</span><span class=p>)</span>
+            <span class=k>return</span> <span class=n>mid</span><span class=p>;</span>
+        <span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=n>arr</span><span class=p>[</span><span class=n>mid</span><span class=p>]</span> <span class=o>&gt;</span> <span class=mi>6</span><span class=p>)</span>
+            <span class=n>right</span> <span class=o>=</span> <span class=n>mid</span><span class=p>;</span>
+        <span class=k>else</span>
+            <span class=n>left</span> <span class=o>=</span> <span class=n>mid</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
+
+    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h2 id=leetcode-相關題目>Leetcode 相關題目</h2>
+<h3 id=依照索引搜尋-search-by-index>依照索引搜尋 (Search by Index)</h3>
+<ul>
+<li><strong><a class=link href=https://leetcode.com/problems/search-insert-position/ target=_blank rel=noopener>Leetcode 35. Search Insert Position</a></strong></li>
+<li><strong><a class=link href=https://leetcode.com/problems/snapshot-array/ target=_blank rel=noopener>Leetcode 1146. Snapshot Array</a></strong></li>
+</ul>
+<h3 id=依照範圍可能搜尋-search-by-space>依照範圍可能搜尋 (Search by space)</h3>
+<ul>
+<li><strong><a class=link href=https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/ target=_blank rel=noopener>Leetcode 378. Kth Smallest Element in a Sorted Matrix</a></strong></li>
+<li><strong><a class=link href=https://leetcode.com/problems/split-array-largest-sum/ target=_blank rel=noopener>Leetcode 410. Split Array Largest Sum</a></strong></li>
+<li><strong><a class=link href=https://leetcode.com/problems/nth-magical-number/ target=_blank rel=noopener>Leetcode 878. Nth Magical Number</a></strong></li>
+<li><strong><a class=link href=https://leetcode.com/problems/divide-chocolate/ target=_blank rel=noopener>Leetcode 1231. Divide Chocolate</a></strong></li>
+</ul>
+</section>
+<footer class=article-footer>
+<section class=article-tags>
+<a href=/tags/programming/>Programming</a>
+<a href=/tags/c++/>C++</a>
+</section>
+<section class=article-lastmod><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>
+Last updated on 2022-02-05
+</span>
+</section></footer>
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css integrity=sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js integrity=sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js integrity=sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{renderMathInElement(document.querySelector(`.article-content`),{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}]})})</script>
+</article>
+<aside class=related-contents--wrapper>
+</aside>
+<script src=https://utteranc.es/client.js repo=leovincentseles/leovincentseles.github.io issue-term=pathname label=Blog-Comment crossorigin=anonymous async></script>
+<style>.utterances{max-width:unset}</style>
+<script>function setUtterancesTheme(b){let a=document.querySelector('.utterances iframe');a&&a.contentWindow.postMessage({type:'set-theme',theme:`github-${b}`},'https://utteranc.es')}addEventListener('message',a=>{if(a.origin!=='https://utteranc.es')return;setUtterancesTheme(document.documentElement.dataset.scheme)}),window.addEventListener('onColorSchemeChange',a=>{setUtterancesTheme(a.detail)})</script>
+<footer class=site-footer>
+<section class=copyright>
+&copy;
+2022 Yin-Chiuan Chen
+</section>
+<section class=powerby>
+Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> <br>
+Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.8.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a>
+</section>
+</footer>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous>
+</main>
+<aside class="sidebar right-sidebar sticky">
+<section class="widget archives">
+<div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg>
+</div>
+<h2 class="widget-title section-title">Table of contents</h2>
+<div class=widget--toc>
+<nav id=TableOfContents>
+<ol>
+<li><a href=#介紹>介紹</a></li>
+<li><a href=#基本模板>基本模板</a>
+<ol>
+<li><a href=#基本模板說明>基本模板說明</a></li>
+<li><a href=#循環不變量>循環不變量</a></li>
+<li><a href=#實作>實作</a></li>
+<li><a href=#分析>分析</a></li>
+</ol>
+</li>
+<li><a href=#三種二元搜索法問題>三種二元搜索法問題</a>
+<ol>
+<li><a href=#尋找陣列中第一個6>尋找陣列中第一個6</a></li>
+<li><a href=#尋找陣列中最後一個6>尋找陣列中最後一個6</a></li>
+<li><a href=#尋找陣列中任一個6>尋找陣列中任一個6</a></li>
+</ol>
+</li>
+<li><a href=#leetcode-相關題目>Leetcode 相關題目</a>
+<ol>
+<li><a href=#依照索引搜尋-search-by-index>依照索引搜尋 (Search by Index)</a></li>
+<li><a href=#依照範圍可能搜尋-search-by-space>依照範圍可能搜尋 (Search by space)</a></li>
+</ol>
+</li>
+</ol>
+</nav>
+</div>
+</section>
+</aside>
+</div>
+<script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const a=document.createElement('link');a.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",a.type="text/css",a.rel="stylesheet",document.head.appendChild(a)})()</script>
+<link rel=stylesheet href=/styles/mainMenu.css>
+<link rel=stylesheet href=/styles/monokai.css>
+<link rel=stylesheet href=/styles/codeBeautify.css>
+<link rel=stylesheet href=/styles/noSelect.css>
+<link rel=stylesheet href=/styles/codeSection.css>
+</body>
+</html>
